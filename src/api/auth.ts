@@ -1,9 +1,9 @@
 const domain = 'https://localhost:3000';
 import { request } from './request';
-import { Args, FormEvent, RequestEvent } from '../types';
+import { Options, FormEvent, RequestEvent } from '../types';
 
 export async function login(e: FormEvent) {
-	async function req(args: Args): Promise<Response> {
+	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(`${domain}/login`, {
 			method: 'POST',
 			mode: 'cors',
@@ -11,7 +11,7 @@ export async function login(e: FormEvent) {
 				'Content-Type': 'application/json',
 			},
 			credentials: 'include',
-			body: args.body
+			body: options.body
 		});
 		return res;
 	}

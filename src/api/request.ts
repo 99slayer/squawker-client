@@ -2,7 +2,7 @@ import {
 	payload as pl,
 	payloadMulti as plm
 } from './payload';
-import { Args, Options, RequestEvent, FormEvent } from '../types';
+import { Options, RequestEvent, FormEvent } from '../types';
 
 function isFormEvent(e: RequestEvent): e is FormEvent {
 	return e as FormEvent !== undefined;
@@ -11,7 +11,7 @@ function isFormEvent(e: RequestEvent): e is FormEvent {
 export async function request(
 	e: RequestEvent,
 	options: Options,
-	req: (args: Args) => Promise<Response>
+	req: (options: Options) => Promise<Response>
 ): Promise<Response> {
 	if (e) e.preventDefault();
 
@@ -33,7 +33,12 @@ export async function request(
 	}
 
 	const apiResponse: Response = await req(
-		{ body: payload, ids: options.ids }
+		{
+			body: payload,
+			ids: options.ids,
+			username: options.username,
+			update: options.update
+		}
 	);
 
 	if (!apiResponse.ok) throw new Error(

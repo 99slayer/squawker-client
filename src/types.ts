@@ -1,14 +1,12 @@
 import React from 'react';
 
-export interface Args {
-	body?: string | FormData;
-	ids?: string | string[];
-}
-
 export interface Options {
-	payload?: 'json' | 'multi',
+	payload?: 'json' | 'multi';
+	body?: string | FormData;
 	file?: string,
-	ids?: string | string[]
+	ids?: string | string[];
+	username?: string;
+	update?: string;
 }
 
 export type RequestEvent = FormEvent | ButtonClickEvent;
