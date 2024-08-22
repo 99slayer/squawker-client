@@ -4,7 +4,12 @@ export interface Options {
 	payload?: 'json' | 'multi';
 	body?: string | FormData;
 	file?: string,
-	ids?: string | string[];
+	ids?: {
+		userId?: string;
+		postId?: string;
+		commentId?: string;
+		likeId?: string;
+	};
 	username?: string;
 	update?: string;
 }
