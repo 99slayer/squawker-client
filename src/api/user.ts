@@ -4,11 +4,13 @@ import { Options, FormEvent, RequestEvent } from '../types';
 
 export async function getUser(e: RequestEvent, username: string) {
 	async function req(options: Options): Promise<Response> {
-		const res: Response = await fetch(`${domain}/user/${options.username}`, {
-			method: 'GET',
-			mode: 'cors',
-			credentials: 'include'
-		});
+		const res: Response = await fetch(
+			`${domain}/user/${options.username}`,
+			{
+				method: 'GET',
+				mode: 'cors',
+				credentials: 'include'
+			});
 		return res;
 	}
 
@@ -34,14 +36,20 @@ export async function createUser(e: FormEvent) {
 	return apiRes;
 }
 
-export async function updateUser(e: FormEvent, username: string, update: string) {
+export async function updateUser(
+	e: FormEvent,
+	username: string,
+	update: string
+) {
 	async function req(options: Options): Promise<Response> {
-		const res: Response = await fetch(`${domain}/${options.username}/update-${options.update}`, {
-			method: 'PUT',
-			mode: 'cors',
-			credentials: 'include',
-			body: options.body
-		});
+		const res: Response = await fetch(
+			`${domain}/${options.username}/update-${options.update}`,
+			{
+				method: 'PUT',
+				mode: 'cors',
+				credentials: 'include',
+				body: options.body
+			});
 		return res;
 	}
 	// payload will be multi once I add image functionality.
