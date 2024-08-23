@@ -2,10 +2,14 @@ const domain = 'https://localhost:3000';
 import { request } from './request';
 import { Options, FormEvent, RequestEvent } from '../types';
 
-export async function getUserComments(e: RequestEvent, username: string) {
+export async function getUserComments(
+	e: RequestEvent,
+	username: string,
+	commentCount: number
+) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
-			`${domain}/${options.username}/comments`,
+			`${domain}/${options.username}/comments?commentCount=${commentCount}`,
 			{
 				method: 'GET',
 				mode: 'cors',
@@ -65,6 +69,9 @@ export async function updateComment(e: FormEvent, commentId: string) {
 			{
 				method: 'PUT',
 				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
 				credentials: 'include',
 				body: options.body
 			});

@@ -2,10 +2,14 @@ const domain = 'https://localhost:3000';
 import { request } from './request';
 import { Options, FormEvent, RequestEvent } from '../types';
 
-export async function getUserLikes(e: RequestEvent, username: string) {
+export async function getUserLikes(
+	e: RequestEvent,
+	username: string,
+	likeCount: number
+) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
-			`${domain}/${options.username}/likes`,
+			`${domain}/${options.username}/likes?likeCount=${likeCount}`,
 			{
 				method: 'GET',
 				mode: 'cors',

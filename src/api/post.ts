@@ -2,13 +2,15 @@ const domain = 'https://localhost:3000';
 import { request } from './request';
 import { Options, FormEvent, RequestEvent } from '../types';
 
-export async function getTimeline(e: RequestEvent) {
+export async function getTimeline(e: RequestEvent, postCount: number) {
 	async function req(): Promise<Response> {
-		const res: Response = await fetch(`${domain}/home`, {
-			method: 'GET',
-			mode: 'cors',
-			credentials: 'include'
-		});
+		const res: Response = await fetch(
+			`${domain}/home?postCount=${postCount}`,
+			{
+				method: 'GET',
+				mode: 'cors',
+				credentials: 'include'
+			});
 		return res;
 	}
 
@@ -16,10 +18,14 @@ export async function getTimeline(e: RequestEvent) {
 	return apiRes;
 }
 
-export async function getUserPosts(e: RequestEvent, username: string) {
+export async function getUserPosts(
+	e: RequestEvent,
+	username: string,
+	postCount: number
+) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
-			`${domain}/${options.username}/posts`,
+			`${domain}/${options.username}/posts?postCount=${postCount}`,
 			{
 				method: 'GET',
 				mode: 'cors',
@@ -52,10 +58,10 @@ export async function getPost(
 	return apiRes;
 }
 
-export async function createPost(e: FormEvent, postId: string) {
+export async function createPost(e: FormEvent, postId: string | null = null) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
-			`${domain}/publish-post/${options?.ids?.postId}`,
+			`${domain}/publish-post/${postId ? options?.ids?.postId : ''}`,
 			{
 				method: 'POST',
 				mode: 'cors',
@@ -68,7 +74,13 @@ export async function createPost(e: FormEvent, postId: string) {
 		return res;
 	}
 
-	const apiRes: Response = await request(e, { payload: 'json', ids: { postId } }, req);
+	const reqOptions: Options = {
+		payload: 'json'
+	};
+
+	if (postId) reqOptions.ids = { postId };
+
+	const apiRes: Response = await request(e, reqOptions, req);
 	return apiRes;
 }
 
@@ -79,6 +91,9 @@ export async function updatePost(e: FormEvent, postId: string) {
 			{
 				method: 'PUT',
 				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
 				credentials: 'include',
 				body: options.body
 			});

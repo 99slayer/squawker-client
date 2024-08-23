@@ -47,9 +47,13 @@ export async function updateUser(
 			{
 				method: 'PUT',
 				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
 				credentials: 'include',
 				body: options.body
 			});
+
 		return res;
 	}
 	// payload will be multi once I add image functionality.
