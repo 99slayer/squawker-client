@@ -18,6 +18,109 @@ export async function getUser(e: RequestEvent, username: string) {
 	return apiRes;
 }
 
+export async function getUsers(
+	e: RequestEvent,
+	userCount: number
+) {
+	async function req(): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/users?userCount=${userCount}`,
+			{
+				method: 'GET',
+				mode: 'cors',
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, {}, req);
+	return apiRes;
+}
+
+export async function getUserFollowers(
+	e: RequestEvent,
+	username: string,
+	userCount: number
+) {
+	async function req(options: Options): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/user/${options.username}/followers?userCount=${userCount}`,
+			{
+				method: 'GET',
+				mode: 'cors',
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { username }, req);
+	return apiRes;
+}
+
+export async function getUserFollowing(
+	e: RequestEvent,
+	username: string,
+	userCount: number
+) {
+	async function req(options: Options): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/user/${options.username}/following?userCount=${userCount}`,
+			{
+				method: 'GET',
+				mode: 'cors',
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { username }, req);
+	return apiRes;
+}
+
+export async function follow(
+	e: RequestEvent,
+	username: string
+) {
+	async function req(options: Options): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/user/follow/${options.username}`,
+			{
+				method: 'PUT',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { username }, req);
+	return apiRes;
+}
+
+export async function unfollow(
+	e: RequestEvent,
+	username: string
+) {
+	async function req(options: Options): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/user/unfollow/${options.username}`,
+			{
+				method: 'PUT',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { username }, req);
+	return apiRes;
+}
+
 export async function createUser(e: FormEvent) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(`${domain}/signup`, {
@@ -33,17 +136,20 @@ export async function createUser(e: FormEvent) {
 	}
 	// payload will be multi once I add image functionality.
 	const apiRes: Response = await request(e, { payload: 'json' }, req);
-	return apiRes;
+	const data: { username: string, nickname: string } = await apiRes.json();
+	localStorage.setItem('username', data.username);
+	localStorage.setItem('nickname', data.nickname);
+
+	return data;
 }
 
-export async function updateUser(
+export async function updateUserAccount(
 	e: FormEvent,
-	username: string,
-	update: string
+	username: string
 ) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
-			`${domain}/${options.username}/update-${options.update}`,
+			`${domain}/${options.username}/account-update`,
 			{
 				method: 'PUT',
 				mode: 'cors',
@@ -57,6 +163,33 @@ export async function updateUser(
 		return res;
 	}
 	// payload will be multi once I add image functionality.
-	const apiRes: Response = await request(e, { payload: 'json', username, update }, req);
+	const apiRes: Response = await request(e, { payload: 'json', username }, req);
+	const data: { username: string, nickname: string } = await apiRes.json();
+	localStorage.setItem('username', data.username);
+	localStorage.setItem('nickname', data.nickname);
+
+	return data;
+}
+
+export async function updateUserSecurity(
+	e: FormEvent,
+	username: string
+) {
+	async function req(options: Options): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/${options.username}/security-update`,
+			{
+				method: 'PUT',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include',
+				body: options.body
+			});
+
+		return res;
+	}
+	const apiRes: Response = await request(e, { payload: 'json', username }, req);
 	return apiRes;
 }

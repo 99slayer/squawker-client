@@ -1,24 +1,58 @@
-import { Link, Outlet } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { v4 as uuid } from 'uuid';
+import { user } from '../../../api/api';
+import { ConnectCardData } from '../../../types';
+import Component from '../../Component';
 
 function ConnectPage() {
+	const [users, setUsers] = useState<ConnectCardData[]>([]);
+	const [userCount, setUserCount] = useState<number>(0);
+
+	const pullUsers = useCallback(async () => {
+		const res: Response = await user.getUsers(null, userCount);
+		const data: ConnectCardData[] = await res.json();
+
+		setUsers(prev => {
+			if (prev[0]?.username === data[0]?.username) return prev;
+			return [...prev, ...data];
+		});
+	}, [userCount]);
+
+	useEffect(() => {
+		pullUsers();
+	}, [pullUsers]);
+
+	function createFollowerCards(userArr: ConnectCardData[]): JSX.Element[] {
+		const cards: JSX.Element[] = [];
+		userArr.map((user) => {
+			cards.push(<li key={uuid()}><Component.UserCard data={user} /></li>);
+		});
+
+		return cards;
+	}
+
 	return (
-		<div className='flex-1 relative'>
-			<header className="p-2 flex flex-col gap-4 sticky top-0 z-10 border-2 border-black bg-white">
-				<div className='flex gap-4'>
-					<button>{'<-'}</button>
-					<div>
-						<h1>Nickname</h1>
-						<p>762 posts</p>
-					</div>
-				</div>
-				<div className='flex gap-4'>
-					<Link to={'/main/connect/'}>Followers</Link>
-					<Link to={'/main/connect/following'}>Following</Link>
-					<Link to={'/main/connect/findusers'}>Find Users</Link>
-				</div>
-			</header>
-			<Outlet />
-		</div>
+		(users.length > 0 ?
+			<div
+				className='flex flex-col'
+			>
+				<Component.Back />
+				<ul className="mt-2 flex flex-col gap-2">
+					{createFollowerCards(users)}
+				</ul>
+				{userCount > users.length ?
+					<></> :
+					<button
+						className='p-2 border-[2px] border-black self-center'
+						onClick={() => setUserCount(prev => prev + 10)}
+					>
+						GET MORE
+					</button>
+				}
+			</div>
+			:
+			<div>THIS WEBSITE HAS NO USERS D:</div>
+		)
 	);
 }
 

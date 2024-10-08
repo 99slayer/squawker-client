@@ -1,44 +1,43 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { post, comment } from '../../../api/api';
+import { comment } from '../../../api/api';
 import { PostInterface } from '../../../types';
 import Component from '../../Component';
 
-function PostPage() {
+function CommentPage() {
 	const { id }: { id: string } = useOutletContext();
 	const navigate = useNavigate();
-	const [currentPost, setCurrentPost] = useState<PostInterface | null>(null);
+	const [commentGroup, setCommentGroup] = useState<PostInterface | null>(null);
 	const [comments, setComments] = useState<PostInterface[]>([]);
 	const [commentCount, setCommentCount] = useState<number>(0);
 
-	const pullPost = useCallback(async () => {
+	const pullCommentGroup = useCallback(async () => {
 		if (!id) return;
-		const res: Response = await post.getPost(null, id);
+		const res: Response = await comment.getCommentGroup(null, id);
 		if (!res.ok && res.status === 404) return navigate(-1);
 		const data: PostInterface = await res.json();
-
-		setCurrentPost(data);
+		setCommentGroup(data);
 	}, [id, navigate]);
 
 	const pullComments = useCallback(async () => {
-		if (!currentPost || currentPost.direct_comment_count === 0) return;
+		if (!commentGroup || commentGroup.direct_comment_count === 0) return;
 		const res: Response = await comment
-			.getPostReplies(null, currentPost.post_data.post_id, commentCount);
+			.getCommentReplies(null, commentGroup.post_data.post_id, commentCount);
 		const data: PostInterface[] = await res.json();
 
 		setComments(prev => {
 			if (prev[0]?._id === data[0]?._id) return prev;
 			return [...prev, ...data];
 		});
-	}, [currentPost, commentCount]);
+	}, [commentGroup, commentCount]);
 
 	useEffect(() => {
-		pullPost();
+		pullCommentGroup();
 		return () => {
 			setComments([]);
 		};
-	}, [pullPost]);
+	}, [pullCommentGroup]);
 
 	useEffect(() => {
 		pullComments();
@@ -56,26 +55,25 @@ function PostPage() {
 	}
 
 	return (
-		(currentPost ?
+		(commentGroup ?
 			<div className='flex flex-col'>
-				<Component.Post data={currentPost} />
-				<Component.ReplyUI id={currentPost.post_data.post_id} />
+				<Component.CommentDisplayGroup
+					commentGroup={commentGroup as PostInterface}
+				/>
+				<Component.ReplyUI id={commentGroup.post_data.post_id} />
 				{comments.length > 0 ?
 					<div>
-						<ul
-							className='flex flex-col'
-						>
+						<ul className='flex flex-col'>
 							{createComments(comments)}
 						</ul>
 						{commentCount > comments.length ?
 							<></> :
 							<button
 								className='p-2 border-[2px] border-black self-center'
-								onClick={() => { setCommentCount(prev => prev + 2); }}
+								onClick={() => { setCommentCount(prev => prev + 10); }}
 							>
 								GET MORE
-							</button>
-						}
+							</button>}
 					</div>
 					:
 					<div>NO COMMENTS YET</div>
@@ -87,4 +85,4 @@ function PostPage() {
 	);
 }
 
-export default PostPage;
+export default CommentPage;

@@ -41,9 +41,5 @@ export async function request(
 		}
 	);
 
-	if (!apiResponse.ok) throw new Error(
-		`${apiResponse.status + ' ' + apiResponse.statusText}`
-	);
-
 	return apiResponse;
 }

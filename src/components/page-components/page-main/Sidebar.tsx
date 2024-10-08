@@ -1,26 +1,24 @@
-import { useContext, useRef } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import PostModal from '../../modal-components/PostModal';
+import { v4 as uuid } from 'uuid';
+import {
+	ButtonClickEvent,
+	AppContextInterface,
+	MainContextInterface
+} from '../../../types';
 import { AppContext } from '../../../App';
-import { ButtonClickEvent } from '../../../types';
-
-const pageLinks: string[] = [
-	'profile',
-	'connect',
-	'settings'
-];
+import { MainContext } from './MainTemplate';
 
 function Sidebar() {
-	const appLogout = useContext(AppContext);
-	const postRef: React.RefObject<HTMLDialogElement> = useRef<HTMLDialogElement>(null);
-
-	function toggle(ref: React.RefObject<HTMLDialogElement>): void {
-		if (ref.current?.hasAttribute('open')) {
-			ref.current.close();
-		} else {
-			ref.current?.showModal();
-		}
-	}
+	const {
+		appLogout,
+		appUsername,
+		appNickname
+	} = useContext(AppContext) as AppContextInterface;
+	const {
+		toggle,
+		postRef
+	} = useContext(MainContext) as MainContextInterface;
 
 	return (
 		<div
@@ -29,6 +27,7 @@ function Sidebar() {
 			<ul className="flex flex-col items-stretch gap-2">
 				<li
 					className='size-10 flex justify-center items-center rounded-full text-white text-xs bg-black'
+					key={uuid()}
 				>
 					ICON
 				</li>
@@ -36,22 +35,41 @@ function Sidebar() {
 					<Link
 						to={'/main'}
 						className="flex-1 p-4 border-[2px] border-black text-xl text-center"
+						key={uuid()}
 					>
-						home
+						HOME
 					</Link>
 				</li>
-				{
-					pageLinks.map((pl) => {
-						return <li className="flex">
-							<Link
-								to={'/main/' + pl}
-								className="flex-1 p-4 border-[2px] border-black text-xl text-center"
-							>
-								{pl}
-							</Link>
-						</li>;
-					})
-				}
+				<li className="flex">
+					<Link
+						to={'/main/profile'}
+						state={{ username: appUsername }}
+						className="flex-1 p-4 border-[2px] border-black text-xl text-center"
+						key={uuid()}
+					>
+						PROFILE
+					</Link>
+				</li>
+				<li className="flex">
+					<Link
+						to={'/main/connect'}
+						state={{ username: appUsername }}
+						className="flex-1 p-4 border-[2px] border-black text-xl text-center"
+						key={uuid()}
+					>
+						CONNECT
+					</Link>
+				</li>
+				<li className="flex">
+					<Link
+						to={'/main/settings'}
+						state={{ username: appUsername }}
+						className="flex-1 p-4 border-[2px] border-black text-xl text-center"
+						key={uuid()}
+					>
+						SETTINGS
+					</Link>
+				</li>
 			</ul>
 			<button
 				onClick={() => { toggle(postRef); }}
@@ -65,7 +83,15 @@ function Sidebar() {
 			>
 				LOGOUT
 			</button>
-			<PostModal ref={postRef} toggle={toggle} />
+			<div
+				className='mt-2 flex items-center gap-2'
+			>
+				<span className='min-w-10 min-h-10 rounded-full bg-black'></span>
+				<div>
+					<h3>{appNickname}</h3>
+					<p>{`@${appUsername}`}</p>
+				</div>
+			</div>
 		</div>
 	);
 }

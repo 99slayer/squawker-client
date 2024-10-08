@@ -16,5 +16,6 @@ module.exports = {
 		],
 		'semi': 2,
 		'quotes': [2, 'single'],
+		'@typescript-eslint/no-unused-vars': 0
 	},
 }

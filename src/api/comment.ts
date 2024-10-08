@@ -22,14 +22,14 @@ export async function getUserComments(
 	return apiRes;
 }
 
-export async function getComment(
+export async function getPostReplies(
 	e: RequestEvent,
-	username: string,
-	commentId: string
+	postId: string,
+	commentCount: number
 ) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
-			`${domain}/${options.username}/comment/${options?.ids?.commentId}`,
+			`${domain}/${options?.ids?.postId}/post-replies?commentCount=${commentCount}`,
 			{
 				method: 'GET',
 				mode: 'cors',
@@ -38,7 +38,46 @@ export async function getComment(
 		return res;
 	}
 
-	const apiRes: Response = await request(e, { username, ids: { commentId } }, req);
+	const apiRes: Response = await request(e, { ids: { postId } }, req);
+	return apiRes;
+}
+
+export async function getCommentReplies(
+	e: RequestEvent,
+	postId: string,
+	commentCount: number
+) {
+	async function req(options: Options): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/${options?.ids?.postId}/comment-replies?commentCount=${commentCount}`,
+			{
+				method: 'GET',
+				mode: 'cors',
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { ids: { postId } }, req);
+	return apiRes;
+}
+
+export async function getCommentGroup(
+	e: RequestEvent,
+	commentId: string
+) {
+	async function req(options: Options): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/comment-group/${options?.ids?.commentId}`,
+			{
+				method: 'GET',
+				mode: 'cors',
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { ids: { commentId } }, req);
 	return apiRes;
 }
 
@@ -59,6 +98,25 @@ export async function createComment(e: FormEvent, postId: string) {
 	}
 
 	const apiRes: Response = await request(e, { payload: 'json', ids: { postId } }, req);
+	return apiRes;
+}
+
+export async function createRepost(e: RequestEvent, commentId: string) {
+	async function req(): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/publish-comment-repost/${commentId}`,
+			{
+				method: 'POST',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { ids: { commentId } }, req);
 	return apiRes;
 }
 

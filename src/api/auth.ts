@@ -18,11 +18,10 @@ export async function login(e: FormEvent) {
 
 	const apiRes: Response = await request(e, { payload: 'json' }, req);
 	const data: { username: string, nickname: string } = await apiRes.json();
-
 	localStorage.setItem('username', data.username);
 	localStorage.setItem('nickname', data.nickname);
 
-	return apiRes;
+	return data;
 }
 
 export async function logout(e: RequestEvent) {
@@ -36,7 +35,6 @@ export async function logout(e: RequestEvent) {
 	}
 
 	const apiRes: Response = await request(e, {}, req);
-
 	localStorage.removeItem('username');
 	localStorage.removeItem('nickname');
 

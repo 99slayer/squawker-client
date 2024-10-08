@@ -40,12 +40,11 @@ export async function getUserPosts(
 
 export async function getPost(
 	e: RequestEvent,
-	username: string,
 	postId: string
 ) {
 	async function req(): Promise<Response> {
 		const res: Response = await fetch(
-			`${domain}/${username}/post/${postId}`,
+			`${domain}/post/${postId}`,
 			{
 				method: 'GET',
 				mode: 'cors',
@@ -54,7 +53,7 @@ export async function getPost(
 		return res;
 	}
 
-	const apiRes: Response = await request(e, { ids: { postId }, username }, req);
+	const apiRes: Response = await request(e, { ids: { postId } }, req);
 	return apiRes;
 }
 
@@ -81,6 +80,25 @@ export async function createPost(e: FormEvent, postId: string | null = null) {
 	if (postId) reqOptions.ids = { postId };
 
 	const apiRes: Response = await request(e, reqOptions, req);
+	return apiRes;
+}
+
+export async function createRepost(e: RequestEvent, postId: string) {
+	async function req(): Promise<Response> {
+		const res: Response = await fetch(
+			`${domain}/publish-post-repost/${postId}`,
+			{
+				method: 'POST',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				credentials: 'include'
+			});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { ids: { postId } }, req);
 	return apiRes;
 }
 

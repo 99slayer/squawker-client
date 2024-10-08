@@ -1,21 +1,33 @@
+import { createContext, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import './styles/App.css';
-import { createContext } from 'react';
 import { logout } from './api/auth';
-import { RequestEvent } from './types';
+import { AppContextInterface, RequestEvent } from './types';
 
-export const AppContext = createContext<((e: RequestEvent) => void)>(() => { });
+export const AppContext = createContext<AppContextInterface | null>(null);
 
 function App() {
 	const navigate = useNavigate();
+	const [appUsername, setAppUsername] =
+		useState<string>(localStorage.getItem('username') as string);
+	const [appNickname, setAppNickname] =
+		useState<string>(localStorage.getItem('nickname') as string);
 
 	async function appLogout(e: RequestEvent): Promise<void> {
 		await logout(e);
 		navigate('/');
 	}
 
+	const contextValues: AppContextInterface = {
+		appLogout,
+		appUsername,
+		setAppUsername,
+		appNickname,
+		setAppNickname
+	};
+
 	return (
-		<AppContext.Provider value={appLogout}>
+		<AppContext.Provider value={contextValues}>
 			<div
 				id='app'
 				className='min-w-full min-h-screen bg-white'

@@ -1,28 +1,8 @@
 const domain = 'https://localhost:3000';
 import { request } from './request';
-import { Options, FormEvent, RequestEvent } from '../types';
+import { Options, RequestEvent } from '../types';
 
-export async function getUserLikes(
-	e: RequestEvent,
-	username: string,
-	likeCount: number
-) {
-	async function req(options: Options): Promise<Response> {
-		const res: Response = await fetch(
-			`${domain}/${options.username}/likes?likeCount=${likeCount}`,
-			{
-				method: 'GET',
-				mode: 'cors',
-				credentials: 'include'
-			});
-		return res;
-	}
-
-	const apiRes: Response = await request(e, { username }, req);
-	return apiRes;
-}
-
-export async function createLike(e: FormEvent, postId: string) {
+export async function createLike(e: RequestEvent, postId: string) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
 			`${domain}/publish-like/${options?.ids?.postId}`,
@@ -42,10 +22,10 @@ export async function createLike(e: FormEvent, postId: string) {
 	return apiRes;
 }
 
-export async function deleteLike(e: RequestEvent, likeId: string) {
+export async function deleteLike(e: RequestEvent, postId: string) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
-			`${domain}/delete-like/${options?.ids?.likeId}`,
+			`${domain}/delete-like/${options?.ids?.postId}`,
 			{
 				method: 'DELETE',
 				mode: 'cors',
@@ -54,6 +34,6 @@ export async function deleteLike(e: RequestEvent, likeId: string) {
 		return res;
 	}
 
-	const apiRes: Response = await request(e, { ids: { likeId } }, req);
+	const apiRes: Response = await request(e, { ids: { postId } }, req);
 	return apiRes;
 }

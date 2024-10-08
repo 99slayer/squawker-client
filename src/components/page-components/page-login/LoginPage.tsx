@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-import LoginModal from '../../modal-components/LoginModal';
-import SignupModal from '../../modal-components/SignupModal';
+import Component from '../../Component';
 
 function LoginPage() {
 	const loginRef = useRef<HTMLDialogElement>(null);
@@ -33,8 +32,8 @@ function LoginPage() {
 					</button>
 				</div>
 				<div>
-					<LoginModal ref={loginRef} toggle={toggle} />
-					<SignupModal ref={signupRef} toggle={toggle} />
+					<Component.LoginModal ref={loginRef} toggle={toggle} />
+					<Component.SignupModal ref={signupRef} toggle={toggle} />
 				</div>
 			</div>
 		</div>
