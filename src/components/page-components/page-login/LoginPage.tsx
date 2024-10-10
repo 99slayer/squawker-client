@@ -1,7 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import Component from '../../Component';
+import { user } from '../../../api/api';
+import { AppContext } from '../../../App';
+import { AppContextInterface } from '../../../types';
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
+	const {
+		setAppUsername,
+		setAppNickname
+	} = useContext(AppContext) as AppContextInterface;
+	const navigate = useNavigate();
 	const loginRef = useRef<HTMLDialogElement>(null);
 	const signupRef = useRef<HTMLDialogElement>(null);
 
@@ -29,6 +38,17 @@ function LoginPage() {
 						className='border-2 border-black'
 					>
 						SIGNUP
+					</button>
+					<button
+						className='px-2 border-2 border-black'
+						onClick={async (e) => {
+							const data: { username: string, nickname: string } = await user.createGuestUser(e);
+							setAppUsername(data.username);
+							setAppNickname(data.nickname);
+							navigate('/main');
+						}}
+					>
+						LOGIN AS GUEST
 					</button>
 				</div>
 				<div>

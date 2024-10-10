@@ -143,6 +143,27 @@ export async function createUser(e: FormEvent) {
 	return data;
 }
 
+export async function createGuestUser(e: RequestEvent) {
+	async function req(): Promise<Response> {
+		const res: Response = await fetch(`${domain}/signup-guest`, {
+			method: 'GET',
+			mode: 'cors',
+			credentials: 'include'
+		});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, {}, req);
+	const data: {
+		username: string,
+		nickname: string
+	} = await apiRes.json();
+	localStorage.setItem('username', data.username);
+	localStorage.setItem('nickname', data.nickname);
+
+	return data;
+}
+
 export async function updateUserAccount(
 	e: FormEvent,
 	username: string
