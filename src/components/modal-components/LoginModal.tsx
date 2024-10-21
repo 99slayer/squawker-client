@@ -11,7 +11,8 @@ type Props = {
 const LoginModal = forwardRef<HTMLDialogElement, Props>(({ toggle }, forwardedRef) => {
 	const {
 		setAppUsername,
-		setAppNickname
+		setAppNickname,
+		setAppPfp
 	} = useContext(AppContext) as AppContextInterface;
 	const navigate = useNavigate();
 	const ref = useRef<HTMLDialogElement>(null);
@@ -40,6 +41,7 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(({ toggle }, forwardedRe
 							const data = await login(e);
 							setAppUsername(data.username);
 							setAppNickname(data.nickname);
+							setAppPfp(data.pfp);
 							navigate('/main');
 						}
 					}

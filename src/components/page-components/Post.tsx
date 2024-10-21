@@ -4,6 +4,7 @@ import { formatDate } from '../../util';
 import { comment, like, post } from '../../api/api';
 import { MainContext } from './page-main/MainTemplate';
 import { MainContextInterface, PostInterface } from '../../types';
+import { clearUpload } from '../../supabase';
 
 function Post({ data }: { data: PostInterface | null }) {
 	const location = useLocation();
@@ -17,6 +18,7 @@ function Post({ data }: { data: PostInterface | null }) {
 
 	useEffect(() => {
 		if (!data) return;
+
 		setLiked(Boolean(data.liked));
 		setLikeCount(data.like_count);
 
@@ -61,7 +63,17 @@ function Post({ data }: { data: PostInterface | null }) {
 					<></>
 				}
 				<div className="flex items-start gap-2">
-					<span className="min-w-6 min-h-6 rounded-full bg-black"></span>
+					<div
+						className='w-6 h-6 rounded-full'
+					>
+						{data.post.user.pfp ?
+							<img src={data.post.user.pfp} />
+							:
+							<span className="material-symbols-outlined">
+								account_circle
+							</span>
+						}
+					</div>
 					<div className="flex-1 flex flex-col">
 						<div className="flex items-center">
 							<div
@@ -138,11 +150,22 @@ function Post({ data }: { data: PostInterface | null }) {
 								>X</button>
 							</form>
 							:
-							<p
-								className='mt-2 mb-2'
-							>
-								{editText ?? data.post.text}
-							</p>
+							<div>
+								{data.post.text ?
+									<p
+										className='mt-2 mb-2'
+									>
+										{editText ?? data.post.text}
+									</p>
+									:
+									<></>}
+							</div>
+						}
+						{data.post.post_image ?
+							<div>
+								<img src={data.post.post_image} />
+							</div>
+							: <></>
 						}
 						{data.quoted_post && !data.quoted_post.post_data ?
 							<div
@@ -185,13 +208,32 @@ function Post({ data }: { data: PostInterface | null }) {
 								}}
 							>
 								<div className='flex items-start gap-2'>
-									<span className='min-w-6 min-h-6 rounded-full bg-black'></span>
+
+									<div
+										className='w-6 h-6 rounded-full'
+									>
+										{data.quoted_post.post.user.pfp ?
+											<img src={data.quoted_post.post.user.pfp} />
+											:
+											<span className="material-symbols-outlined">
+												account_circle
+											</span>
+										}
+									</div>
+
 									<h3 className='font-bold'>{data.quoted_post.post.user.nickname}</h3>
 									<p>{`@${data.quoted_post.post.user.username}`}</p>
 									<p>{`${formatDate(data.quoted_post.post_data.timestamp)}`}</p>
 								</div>
 								<div className='flex gap-2'>
-									<div>image</div>
+									{data.quoted_post.post.post_image ?
+										<div
+											className='w-32 h-32 flex items-center justify-center'
+										>
+											<img src={data.quoted_post.post.post_image} />
+										</div>
+										: <></>
+									}
 									<p>{data.quoted_post.post.text}</p>
 								</div>
 							</article>
@@ -287,7 +329,7 @@ function OptionsDropdown(
 							setOpen(false);
 						}}
 					>
-						{!data?.post_data.repost ?
+						{!data?.post_data.repost && data.post.text ?
 							<button
 								className='px-4 hover:bg-slate-300'
 								onClick={() => {
@@ -302,10 +344,14 @@ function OptionsDropdown(
 								e.stopPropagation();
 								if (type === 'Post') {
 									const res: Response = await post.deletePost(e, data._id);
+
 									if (res.ok) setDeleted(true);
+									if (!data.post_data.repost && data.post.post_image) await clearUpload(data.post.post_image);
 								} else if (type === 'Comment') {
 									const res: Response = await comment.deleteComment(e, data._id);
+
 									if (res.ok) setDeleted(true);
+									if (!data.post_data.repost && data.post.post_image) await clearUpload(data.post.post_image);
 								}
 							}}
 						>Delete</button>

@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 function LoginPage() {
 	const {
 		setAppUsername,
-		setAppNickname
+		setAppNickname,
+		setAppPfp
 	} = useContext(AppContext) as AppContextInterface;
 	const navigate = useNavigate();
 	const loginRef = useRef<HTMLDialogElement>(null);
@@ -42,9 +43,14 @@ function LoginPage() {
 					<button
 						className='px-2 border-2 border-black'
 						onClick={async (e) => {
-							const data: { username: string, nickname: string } = await user.createGuestUser(e);
+							const data: {
+								username: string,
+								nickname: string,
+								pfp: string
+							} = await user.createGuestUser(e);
 							setAppUsername(data.username);
 							setAppNickname(data.nickname);
+							setAppPfp(data.pfp);
 							navigate('/main');
 						}}
 					>

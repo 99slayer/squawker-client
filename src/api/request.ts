@@ -1,7 +1,4 @@
-import {
-	payload as pl,
-	payloadMulti as plm
-} from './payload';
+import { payload as pl } from './payload';
 import { Options, RequestEvent, FormEvent } from '../types';
 
 function isFormEvent(e: RequestEvent): e is FormEvent {
@@ -13,31 +10,16 @@ export async function request(
 	options: Options,
 	req: (options: Options) => Promise<Response>
 ): Promise<Response> {
-	if (e) e.preventDefault();
-
 	let payload;
 
-	if (options.payload && isFormEvent(e)) {
-		switch (options.payload) {
-			case 'json':
-				payload = pl(e);
-				break;
-
-			case 'multi':
-				payload = plm(e, options.file);
-				break;
-
-			default:
-				break;
-		}
-	}
+	if (e) e.preventDefault();
+	if (options.payload && isFormEvent(e)) payload = pl(e);
 
 	const apiResponse: Response = await req(
 		{
 			body: payload,
 			ids: options.ids,
-			username: options.username,
-			update: options.update
+			username: options.username
 		}
 	);
 

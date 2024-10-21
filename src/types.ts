@@ -1,9 +1,8 @@
 import React from 'react';
 
 export interface Options {
-	payload?: 'json' | 'multi';
+	payload?: boolean;
 	body?: string | FormData;
-	file?: string,
 	ids?: {
 		userId?: string;
 		postId?: string;
@@ -11,7 +10,6 @@ export interface Options {
 		likeId?: string;
 	};
 	username?: string;
-	update?: string;
 }
 
 export interface UserInterface {
@@ -20,6 +18,7 @@ export interface UserInterface {
 	nickname: string;
 	join_date: string;
 	profile_text?: string;
+	profile_header?: string;
 	pfp?: string;
 	following: string[];
 	followers: string[];
@@ -84,6 +83,8 @@ export interface AppContextInterface {
 	setAppUsername: React.Dispatch<React.SetStateAction<string>>,
 	appNickname: string,
 	setAppNickname: React.Dispatch<React.SetStateAction<string>>,
+	appPfp: string | null,
+	setAppPfp: React.Dispatch<React.SetStateAction<string | null>>,
 }
 
 export interface MainContextInterface {

@@ -134,11 +134,16 @@ export async function createUser(e: FormEvent) {
 		});
 		return res;
 	}
-	// payload will be multi once I add image functionality.
-	const apiRes: Response = await request(e, { payload: 'json' }, req);
-	const data: { username: string, nickname: string } = await apiRes.json();
+
+	const apiRes: Response = await request(e, { payload: true }, req);
+	const data: {
+		username: string,
+		nickname: string,
+		pfp: string
+	} = await apiRes.json();
 	localStorage.setItem('username', data.username);
 	localStorage.setItem('nickname', data.nickname);
+	localStorage.setItem('pfp', data.pfp ?? '');
 
 	return data;
 }
@@ -156,10 +161,12 @@ export async function createGuestUser(e: RequestEvent) {
 	const apiRes: Response = await request(e, {}, req);
 	const data: {
 		username: string,
-		nickname: string
+		nickname: string,
+		pfp: string
 	} = await apiRes.json();
 	localStorage.setItem('username', data.username);
 	localStorage.setItem('nickname', data.nickname);
+	localStorage.setItem('pfp', data.pfp ?? '');
 
 	return data;
 }
@@ -183,12 +190,18 @@ export async function updateUserAccount(
 
 		return res;
 	}
-	// payload will be multi once I add image functionality.
-	const apiRes: Response = await request(e, { payload: 'json', username }, req);
-	const data: { username: string, nickname: string } = await apiRes.json();
-	localStorage.setItem('username', data.username);
-	localStorage.setItem('nickname', data.nickname);
 
+	const apiRes: Response = await request(e, { payload: true, username }, req);
+	const data: {
+		username?: string,
+		nickname?: string,
+		pfp?: string,
+		header?: string
+	} = await apiRes.json();
+	if (data.username) localStorage.setItem('username', data.username);
+	if (data.nickname) localStorage.setItem('nickname', data.nickname);
+	if (data.pfp) localStorage.setItem('pfp', data.pfp);
+	if (data.pfp === null) localStorage.setItem('pfp', '');
 	return data;
 }
 
@@ -211,6 +224,6 @@ export async function updateUserSecurity(
 
 		return res;
 	}
-	const apiRes: Response = await request(e, { payload: 'json', username }, req);
+	const apiRes: Response = await request(e, { payload: true, username }, req);
 	return apiRes;
 }

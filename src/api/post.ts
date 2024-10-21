@@ -57,7 +57,10 @@ export async function getPost(
 	return apiRes;
 }
 
-export async function createPost(e: FormEvent, postId: string | null = null) {
+export async function createPost(
+	e: FormEvent,
+	postId: string | null = null
+) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
 			`${domain}/publish-post/${postId ? options?.ids?.postId : ''}`,
@@ -74,7 +77,7 @@ export async function createPost(e: FormEvent, postId: string | null = null) {
 	}
 
 	const reqOptions: Options = {
-		payload: 'json'
+		payload: true
 	};
 
 	if (postId) reqOptions.ids = { postId };
@@ -118,7 +121,7 @@ export async function updatePost(e: FormEvent, postId: string) {
 		return res;
 	}
 
-	const apiRes: Response = await request(e, { payload: 'json', ids: { postId } }, req);
+	const apiRes: Response = await request(e, { payload: true, ids: { postId } }, req);
 	return apiRes;
 }
 

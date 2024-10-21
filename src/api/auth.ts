@@ -16,10 +16,15 @@ export async function login(e: FormEvent) {
 		return res;
 	}
 
-	const apiRes: Response = await request(e, { payload: 'json' }, req);
-	const data: { username: string, nickname: string } = await apiRes.json();
+	const apiRes: Response = await request(e, { payload: true }, req);
+	const data: {
+		username: string,
+		nickname: string,
+		pfp: string
+	} = await apiRes.json();
 	localStorage.setItem('username', data.username);
 	localStorage.setItem('nickname', data.nickname);
+	localStorage.setItem('pfp', data.pfp ?? '');
 
 	return data;
 }
@@ -37,6 +42,7 @@ export async function logout(e: RequestEvent) {
 	const apiRes: Response = await request(e, {}, req);
 	localStorage.removeItem('username');
 	localStorage.removeItem('nickname');
+	localStorage.removeItem('pfp');
 
 	return apiRes;
 }

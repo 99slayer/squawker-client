@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import {
-	ButtonClickEvent,
 	AppContextInterface,
 	MainContextInterface
 } from '../../../types';
@@ -13,7 +12,8 @@ function Sidebar() {
 	const {
 		appLogout,
 		appUsername,
-		appNickname
+		appNickname,
+		appPfp,
 	} = useContext(AppContext) as AppContextInterface;
 	const {
 		toggle,
@@ -78,7 +78,7 @@ function Sidebar() {
 				POST
 			</button >
 			<button
-				onClick={(e: ButtonClickEvent) => { appLogout(e); }}
+				onClick={(e) => { appLogout(e); }}
 				className="flex-1 mt-2 p-4 border-[2px] border-black text-xl text-center"
 			>
 				LOGOUT
@@ -86,7 +86,17 @@ function Sidebar() {
 			<div
 				className='mt-2 flex items-center gap-2'
 			>
-				<span className='min-w-10 min-h-10 rounded-full bg-black'></span>
+				{appPfp ?
+					<div
+						className='rounded-full'
+					>
+						<img className='w-[44px] h-[44px] rounded-full object-cover' src={appPfp} />
+					</div>
+					:
+					<span className="text-[44px] material-symbols-outlined filled rounded-full">
+						account_circle
+					</span>
+				}
 				<div>
 					<h3>{appNickname}</h3>
 					<p>{`@${appUsername}`}</p>

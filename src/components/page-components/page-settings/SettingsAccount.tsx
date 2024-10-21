@@ -16,10 +16,12 @@ function SettingsAccount() {
 			<form
 				className="flex flex-col items-stretch gap-2"
 				onSubmit={async (e) => {
-					const data: { username: string, nickname: string } = await user
-						.updateUserAccount(e, appUsername);
-					setAppUsername(data.username);
-					setAppNickname(data.nickname);
+					const data: {
+						username?: string,
+						nickname?: string
+					} = await user.updateUserAccount(e, appUsername);
+					if (data.username) setAppUsername(data.username);
+					if (data.nickname) setAppNickname(data.nickname);
 				}}
 			>
 				<Component.Input

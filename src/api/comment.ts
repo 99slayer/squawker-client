@@ -81,7 +81,10 @@ export async function getCommentGroup(
 	return apiRes;
 }
 
-export async function createComment(e: FormEvent, postId: string) {
+export async function createComment(
+	e: FormEvent,
+	postId: string
+) {
 	async function req(options: Options): Promise<Response> {
 		const res: Response = await fetch(
 			`${domain}/publish-comment/${options?.ids?.postId}`,
@@ -97,7 +100,7 @@ export async function createComment(e: FormEvent, postId: string) {
 		return res;
 	}
 
-	const apiRes: Response = await request(e, { payload: 'json', ids: { postId } }, req);
+	const apiRes: Response = await request(e, { payload: true, ids: { postId } }, req);
 	return apiRes;
 }
 
@@ -136,7 +139,7 @@ export async function updateComment(e: FormEvent, commentId: string) {
 		return res;
 	}
 
-	const apiRes: Response = await request(e, { payload: 'json', ids: { commentId } }, req);
+	const apiRes: Response = await request(e, { payload: true, ids: { commentId } }, req);
 	return apiRes;
 }
 

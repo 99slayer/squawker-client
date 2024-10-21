@@ -8,10 +8,9 @@ export const AppContext = createContext<AppContextInterface | null>(null);
 
 function App() {
 	const navigate = useNavigate();
-	const [appUsername, setAppUsername] =
-		useState<string>(localStorage.getItem('username') as string);
-	const [appNickname, setAppNickname] =
-		useState<string>(localStorage.getItem('nickname') as string);
+	const [appUsername, setAppUsername] = useState<string>(localStorage.getItem('username') as string);
+	const [appNickname, setAppNickname] = useState<string>(localStorage.getItem('nickname') as string);
+	const [appPfp, setAppPfp] = useState<string | null>(localStorage.getItem('pfp') as string);
 
 	async function appLogout(e: RequestEvent): Promise<void> {
 		await logout(e);
@@ -23,7 +22,9 @@ function App() {
 		appUsername,
 		setAppUsername,
 		appNickname,
-		setAppNickname
+		setAppNickname,
+		appPfp,
+		setAppPfp
 	};
 
 	return (
