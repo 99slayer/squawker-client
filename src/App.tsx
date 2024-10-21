@@ -14,6 +14,7 @@ function App() {
 
 	async function appLogout(e: RequestEvent): Promise<void> {
 		await logout(e);
+		setAppPfp(null);
 		navigate('/');
 	}
 
