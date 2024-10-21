@@ -5,7 +5,7 @@ import { upload } from '../../../supabase';
 
 function ReplyUI({ id }: { id: string | null }) {
 	const navigate = useNavigate();
-	const ref = useRef<HTMLTextAreaElement>(null);
+	const textRef = useRef<HTMLTextAreaElement>(null);
 	const fileRef = useRef<HTMLInputElement>(null);
 	const [image, setImage] = useState<string | null>(null);
 	const [uploadData, setUpload] = useState<{
@@ -17,6 +17,14 @@ function ReplyUI({ id }: { id: string | null }) {
 		data: null,
 		folder: null
 	});
+	const [disabled, setDisabled] = useState<boolean>(false);
+
+	const clearForm = () => {
+		textRef.current!.value = '';
+		fileRef.current!.value = '';
+		setImage(null);
+		setUpload({ type: null, data: null, folder: null });
+	};
 
 	return (
 		(id ?
@@ -26,28 +34,30 @@ function ReplyUI({ id }: { id: string | null }) {
 					onSubmit={async (e) => {
 						e.preventDefault();
 
-						const res: Response = await comment.createComment(e, id);
-						const data: { _id: string } = await res.json();
+						if (textRef.current!.value || fileRef.current!.value) {
+							const res: Response = await comment.createComment(e, id);
 
-						if (res.ok && data) {
-							ref.current!.value = '';
-							setImage(null);
-							setUpload({ type: null, data: null, folder: null });
-							navigate(
-								`/main/status/comment/${data._id}`,
-								{
-									state: {
-										id: data._id,
-										post_type: 'Comment'
+							if (res.ok) {
+								const data: { _id: string } = await res.json();
+								clearForm();
+								navigate(
+									`/main/status/comment/${data._id}`,
+									{
+										state: {
+											id: data._id,
+											post_type: 'Comment'
+										}
 									}
-								}
-							);
+								);
+							}
 						}
+
+						setDisabled(false);
 					}}
 				>
 					<textarea
 						className='w-[100%] min-h-24 p-2 resize-none rounded-xl border-[2px] border-black'
-						ref={ref}
+						ref={textRef}
 						name='text'
 						placeholder='whats up?'
 					/>
@@ -120,8 +130,10 @@ function ReplyUI({ id }: { id: string | null }) {
 						</button>
 						<button
 							className="ml-auto p-1 border-[2px] border-black"
-							onClick={async (e) => {
-								e.preventDefault();
+							type='button'
+							disabled={disabled}
+							onClick={async () => {
+								setDisabled(true);
 
 								if (uploadData.type && uploadData.data) {
 									const url: string | null = await upload(uploadData);

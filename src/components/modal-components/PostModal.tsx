@@ -39,6 +39,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			folder: null
 		});
 		const [quotedPost, setQuotedPost] = useState<PostInterface | null>(null);
+		const [disabled, setDisabled] = useState<boolean>(false);
 
 		const pullQuotedPost = useCallback(async () => {
 			if (!postId) {
@@ -50,6 +51,14 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			setQuotedPost(data);
 		}, [postId]);
 
+		const clearForm = () => {
+			textRef.current!.value = '';
+			fileRef.current!.value = '';
+			setPostId(null);
+			setImage(null);
+			setUpload({ type: null, data: null, folder: null });
+		};
+
 		useEffect(() => {
 			pullQuotedPost();
 		}, [pullQuotedPost]);
@@ -58,13 +67,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			<dialog
 				ref={ref}
 				className='w-[500px] max-w-[500px] p-2 translate-y-[-80px] border-2 border-black bg-gray-300'
-				onClose={() => {
-					textRef.current!.value = '';
-					fileRef.current!.value = '';
-					setPostId(null);
-					setImage(null);
-					setUpload({ type: null, data: null, folder: null });
-				}}
+				onClose={() => clearForm()}
 			>
 				<div className='flex flex-col gap-4'>
 					<button
@@ -78,21 +81,25 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 						onSubmit={async (e: FormEvent) => {
 							e.preventDefault();
 
-							const res: Response = await post.createPost(e, postId);
-							const data: { _id: string } = await res.json();
+							if (textRef.current!.value || fileRef.current!.value) {
+								const res: Response = await post.createPost(e, postId);
 
-							if (res.ok && data) {
-								navigate(
-									`/main/status/post/${data._id}`,
-									{
-										state: {
-											id: data._id,
-											post_type: 'Post'
+								if (res.ok) {
+									const data: { _id: string } = await res.json();
+									navigate(
+										`/main/status/post/${data._id}`,
+										{
+											state: {
+												id: data._id,
+												post_type: 'Post'
+											}
 										}
-									}
-								);
-								toggle(ref);
+									);
+									toggle(ref);
+								}
 							}
+
+							setDisabled(false);
 						}}
 					>
 						<div className='flex items-stretch gap-2'>
@@ -224,7 +231,10 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 							<button
 								className='ml-auto p-1 bg-white'
 								type='button'
+								disabled={disabled}
 								onClick={async () => {
+									setDisabled(true);
+
 									if (uploadData.type && uploadData.data) {
 										const url: string | null = await upload(uploadData);
 										if (!url) return;
