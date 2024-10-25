@@ -1,43 +1,31 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { user } from '../../../api/api';
 import { formatDate } from '../../../util';
-import { AppContextInterface, UserInterface } from '../../../types';
+import { AppContextInterface } from '../../../types';
 import { AppContext } from '../../../App';
 import { clearUpload, upload } from '../../../supabase';
+import useFetchUser from '../../../hooks/useFetchUser';
 
 function ProfilePage() {
 	const { state } = useLocation();
 	const navigate = useNavigate();
 	const {
-		appUsername,
 		appPfp,
 		setAppPfp
 	} = useContext(AppContext) as AppContextInterface;
 	const headerRef = useRef<HTMLInputElement>(null);
 	const pfpRef = useRef<HTMLInputElement>(null);
-	const [currentUser, setCurrentUser] = useState<UserInterface | null>(null);
-	const [following, setFollowing] = useState<boolean>(false);
-	const [header, setHeader] = useState<string | null | undefined>(null);
 	const [pfpHover, setPfpHover] = useState<boolean>(false);
 	const [headerHover, setHeaderHover] = useState<boolean>(false);
-
-	const pullUserData = useCallback(async () => {
-		if (!state) return;
-		const res: Response = await user.getUser(null, state.username);
-		const data: UserInterface = await res.json();
-		setCurrentUser(data);
-		setHeader(data.profile_header);
-	}, [state]);
-
-	useEffect(() => {
-		pullUserData();
-	}, [pullUserData]);
-
-	useEffect(() => {
-		if (!currentUser) return;
-		setFollowing(Boolean(currentUser.isFollowing));
-	}, [currentUser]);
+	const {
+		currentUser,
+		isUser,
+		following,
+		changeFollowing,
+		header,
+		changeHeader
+	} = useFetchUser(state.username);
 
 	return (
 		(currentUser ?
@@ -63,7 +51,7 @@ function ProfilePage() {
 					<form
 						onSubmit={async (e) => {
 							e.preventDefault();
-							const data = await user.updateUserAccount(e, appUsername);
+							const data = await user.updateUserAccount(e, currentUser.username);
 							if (data.pfp || data.pfp === null) setAppPfp(data.pfp);
 						}}
 					>
@@ -74,8 +62,10 @@ function ProfilePage() {
 							accept='image/jpeg image/png'
 						/>
 						<span
-							className="absolute top-[200px] left-3 cursor-pointer"
+							className={`absolute top-[200px] left-3 ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
 							onClick={(e) => {
+								if (!isUser) return;
+
 								e.preventDefault();
 								const input: HTMLInputElement = document.createElement('input');
 								input.type = 'file';
@@ -114,18 +104,23 @@ function ProfilePage() {
 							<div
 								className='flex items-center justify-center relative z-10'
 							>
-								{appPfp ?
+								{isUser && appPfp || !isUser && currentUser.pfp ?
 									<div
 										className='border-[2px] border-black rounded-full'
 									>
-										<img className='w-[120px] h-[120px] rounded-full object-cover' src={appPfp} />
+										<img
+											className='w-[120px] h-[120px] rounded-full object-cover'
+											src={isUser ? appPfp ?? '' : currentUser.pfp}
+										/>
 									</div>
 									:
-									<span className="text-[136px] material-symbols-outlined filled rounded-full bg-white">
+									<span
+										className="material-symbols-outlined filled text-[120px] rounded-full bg-white"
+									>
 										account_circle
 									</span>
 								}
-								{pfpHover && appPfp ?
+								{pfpHover && appPfp && isUser ?
 									<button
 										className='w-8 h-8 absolute border-[2px] border-black rounded-full top-0 right-0 text-stone-100 bg-red-500'
 										onClick={async (e) => {
@@ -145,8 +140,8 @@ function ProfilePage() {
 						<form
 							onSubmit={async (e) => {
 								e.preventDefault();
-								const data = await user.updateUserAccount(e, appUsername);
-								if (data.header || data.header === null) setHeader(data.header);
+								const data = await user.updateUserAccount(e, currentUser.username);
+								if (data.header || data.header === null) changeHeader(data.header);
 							}}
 						>
 							<input
@@ -156,8 +151,10 @@ function ProfilePage() {
 								accept='image/jpeg image/png'
 							/>
 							<div
-								className="h-[200px] border-b-[2px] flex border-black cursor-pointer"
+								className={`h-[200px] border-b-[2px] flex border-black ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
 								onClick={(e) => {
+									if (!isUser) return;
+
 									e.preventDefault();
 									const input: HTMLInputElement = document.createElement('input');
 									input.type = 'file';
@@ -204,7 +201,7 @@ function ProfilePage() {
 										:
 										<></>
 									}
-									{headerHover && header ?
+									{headerHover && header && isUser ?
 										<button
 											className='w-8 h-8 absolute border-[2px] border-black rounded-full top-2 right-2 text-stone-100 bg-red-500'
 											onClick={async (e) => {
@@ -224,17 +221,17 @@ function ProfilePage() {
 						<div className="p-2 flex flex-col gap-2">
 							<div className="flex gap-2">
 								<button className="ml-auto p-1 border-2 border-black">...</button>
-								{currentUser.username !== appUsername ?
+								{!isUser ?
 									<button
 										className='p-1 border-2 border-black'
 										type='button'
 										onClick={async () => {
 											if (following) {
 												const res: Response = await user.unfollow(null, currentUser.username);
-												if (res.ok) setFollowing(false);
+												if (res.ok) changeFollowing(false);
 											} else {
 												const res: Response = await user.follow(null, currentUser.username);
-												if (res.ok) setFollowing(true);
+												if (res.ok) changeFollowing(true);
 											}
 										}}
 									>

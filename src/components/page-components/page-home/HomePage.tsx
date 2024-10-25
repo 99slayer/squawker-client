@@ -1,26 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import { post } from '../../../api/api';
 import { PostInterface } from '../../../types';
 import Component from '../../Component';
+import useFetchTimeline from '../../../hooks/useFetchTimeline';
 
 function HomePage() {
-	const [posts, setPosts] = useState<PostInterface[]>([]);
 	const [postCount, setPostCount] = useState<number>(0);
-
-	const pullTimeline = useCallback(async () => {
-		const res: Response = await post
-			.getTimeline(null, postCount);
-		const data = await res.json();
-		setPosts(prev => {
-			if (prev[0]?._id === data[0]?._id) return prev;
-			return [...prev, ...data];
-		});
-	}, [postCount]);
-
-	useEffect(() => {
-		pullTimeline();
-	}, [pullTimeline]);
+	const { posts } = useFetchTimeline(postCount);
 
 	function createTimeline(postArr: PostInterface[]): JSX.Element[] | [] {
 		const postElements: JSX.Element[] = [];

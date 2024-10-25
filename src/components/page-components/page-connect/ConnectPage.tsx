@@ -1,26 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { v4 as uuid } from 'uuid';
-import { user } from '../../../api/api';
 import { ConnectCardData } from '../../../types';
 import Component from '../../Component';
+import useFetchUsers from '../../../hooks/useFetchUsers';
 
 function ConnectPage() {
-	const [users, setUsers] = useState<ConnectCardData[]>([]);
 	const [userCount, setUserCount] = useState<number>(0);
-
-	const pullUsers = useCallback(async () => {
-		const res: Response = await user.getUsers(null, userCount);
-		const data: ConnectCardData[] = await res.json();
-
-		setUsers(prev => {
-			if (prev[0]?.username === data[0]?.username) return prev;
-			return [...prev, ...data];
-		});
-	}, [userCount]);
-
-	useEffect(() => {
-		pullUsers();
-	}, [pullUsers]);
+	const { users }: { users: ConnectCardData[] } = useFetchUsers(userCount);
 
 	function createFollowerCards(userArr: ConnectCardData[]): JSX.Element[] {
 		const cards: JSX.Element[] = [];

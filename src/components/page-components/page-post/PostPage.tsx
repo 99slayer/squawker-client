@@ -1,48 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { post, comment } from '../../../api/api';
 import { PostInterface } from '../../../types';
 import Component from '../../Component';
+import useFetchPost from '../../../hooks/useFetchPost';
+import useFetchReplies from '../../../hooks/useFetchReplies';
 
 function PostPage() {
 	const { id }: { id: string } = useOutletContext();
-	const navigate = useNavigate();
-	const [currentPost, setCurrentPost] = useState<PostInterface | null>(null);
-	const [comments, setComments] = useState<PostInterface[]>([]);
 	const [commentCount, setCommentCount] = useState<number>(0);
-
-	const pullPost = useCallback(async () => {
-		if (!id) return;
-		const res: Response = await post.getPost(null, id);
-		if (!res.ok && res.status === 404) return navigate(-1);
-		const data: PostInterface = await res.json();
-
-		setCurrentPost(data);
-	}, [id, navigate]);
-
-	const pullComments = useCallback(async () => {
-		if (!currentPost || currentPost.direct_comment_count === 0) return;
-		const res: Response = await comment
-			.getPostReplies(null, currentPost.post_data.post_id, commentCount);
-		const data: PostInterface[] = await res.json();
-
-		setComments(prev => {
-			if (prev[0]?._id === data[0]?._id) return prev;
-			return [...prev, ...data];
-		});
-	}, [currentPost, commentCount]);
-
-	useEffect(() => {
-		pullPost();
-		return () => {
-			setComments([]);
-		};
-	}, [pullPost]);
-
-	useEffect(() => {
-		pullComments();
-	}, [pullComments]);
+	const [currentPost] = useFetchPost(id);
+	const { comments } = useFetchReplies(id, commentCount, 'Post');
 
 	function createComments(commentArr: PostInterface[]): JSX.Element[] {
 		const commentElements: JSX.Element[] = [];

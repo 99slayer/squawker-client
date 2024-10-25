@@ -1,29 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { user } from '../../../api/api';
 import { ConnectCardData } from '../../../types';
 import Component from '../../Component';
+import useFetchFollowing from '../../../hooks/useFetchFollowing';
 
 function Following() {
 	const { state } = useLocation();
-	const [users, setUsers] = useState<ConnectCardData[]>([]);
 	const [userCount, setUserCount] = useState<number>(0);
-
-	const pullFollowing = useCallback(async () => {
-		const res: Response = await user
-			.getUserFollowing(null, state.username, userCount);
-		const data: ConnectCardData[] = await res.json();
-
-		setUsers(prev => {
-			if (prev[0]?.username === data[0]?.username) return prev;
-			return [...prev, ...data];
-		});
-	}, [state, userCount]);
-
-	useEffect(() => {
-		pullFollowing();
-	}, [pullFollowing]);
+	const { users }: { users: ConnectCardData[] } = useFetchFollowing(state.username, userCount);
 
 	function createFollowingCards(userArr: ConnectCardData[]): JSX.Element[] {
 		const cards: JSX.Element[] = [];

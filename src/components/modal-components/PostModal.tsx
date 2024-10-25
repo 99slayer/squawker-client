@@ -1,8 +1,6 @@
 import React, {
 	forwardRef,
-	useCallback,
 	useContext,
-	useEffect,
 	useImperativeHandle,
 	useRef,
 	useState
@@ -13,6 +11,7 @@ import { AppContextInterface, FormEvent, PostInterface } from '../../types';
 import { formatDate } from '../../util';
 import { upload } from '../../supabase';
 import { AppContext } from '../../App';
+import useFetchPost from '../../hooks/useFetchPost';
 
 type Props = {
 	toggle: (ref: React.RefObject<HTMLDialogElement>) => void;
@@ -38,18 +37,8 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			data: null,
 			folder: null
 		});
-		const [quotedPost, setQuotedPost] = useState<PostInterface | null>(null);
 		const [disabled, setDisabled] = useState<boolean>(false);
-
-		const pullQuotedPost = useCallback(async () => {
-			if (!postId) {
-				setQuotedPost(null);
-				return;
-			}
-			const res: Response = await post.getPost(null, postId);
-			const data: PostInterface = await res.json();
-			setQuotedPost(data);
-		}, [postId]);
+		const [quotedPost]: (PostInterface | null)[] = useFetchPost(postId as string);
 
 		const clearForm = () => {
 			textRef.current!.value = '';
@@ -58,10 +47,6 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			setImage(null);
 			setUpload({ type: null, data: null, folder: null });
 		};
-
-		useEffect(() => {
-			pullQuotedPost();
-		}, [pullQuotedPost]);
 
 		return (
 			<dialog

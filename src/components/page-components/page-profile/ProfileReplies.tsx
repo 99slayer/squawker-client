@@ -1,29 +1,14 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import { PostInterface } from '../../../types';
-import { comment } from '../../../api/api';
 import Component from '../../Component';
+import useFetchComments from '../../../hooks/useFetchComments';
 
 function ProfileReplies() {
 	const { state } = useLocation();
-	const [commentGroups, setCommentGroups] = useState<PostInterface[]>([]);
 	const [commentCount, setCommentCount] = useState<number>(0);
-
-	const pullUserComments = useCallback(async () => {
-		if (!state) return;
-		const res: Response = await comment
-			.getUserComments(null, state.username, commentCount);
-		const data: PostInterface[] = await res.json();
-		setCommentGroups(prev => {
-			if (prev[0]?._id === data[0]?._id) return prev;
-			return [...prev, ...data];
-		});
-	}, [state, commentCount]);
-
-	useEffect(() => {
-		pullUserComments();
-	}, [pullUserComments]);
+	const { commentGroups } = useFetchComments(state.username, commentCount);
 
 	function createComments(commentArr: PostInterface[]): JSX.Element[] {
 		const commentElements: JSX.Element[] = [];
