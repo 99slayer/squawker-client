@@ -46,3 +46,18 @@ export async function logout(e: RequestEvent) {
 
 	return apiRes;
 }
+
+export async function verify(e: RequestEvent, username: string) {
+	async function req(options: Options): Promise<Response> {
+		const res: Response = await fetch(`${domain}/verify/${options.username}`, {
+			method: 'GET',
+			mode: 'cors',
+			credentials: 'include'
+		});
+		return res;
+	}
+
+	const apiRes: Response = await request(e, { username }, req);
+
+	return apiRes;
+}

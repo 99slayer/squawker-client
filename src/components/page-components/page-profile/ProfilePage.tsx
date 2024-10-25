@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { user } from '../../../api/api';
 import { formatDate } from '../../../util';
@@ -6,26 +6,29 @@ import { AppContextInterface } from '../../../types';
 import { AppContext } from '../../../App';
 import { clearUpload, upload } from '../../../supabase';
 import useFetchUser from '../../../hooks/useFetchUser';
+import useVerifyUser from '../../../hooks/useVerifyUser';
 
 function ProfilePage() {
 	const { state } = useLocation();
 	const navigate = useNavigate();
-	const {
-		appPfp,
-		setAppPfp
-	} = useContext(AppContext) as AppContextInterface;
+	const { setAppPfp } = useContext(AppContext) as AppContextInterface;
 	const headerRef = useRef<HTMLInputElement>(null);
 	const pfpRef = useRef<HTMLInputElement>(null);
 	const [pfpHover, setPfpHover] = useState<boolean>(false);
 	const [headerHover, setHeaderHover] = useState<boolean>(false);
-	const {
-		currentUser,
-		isUser,
-		following,
-		changeFollowing,
-		header,
-		changeHeader
-	} = useFetchUser(state.username);
+	const { currentUser, } = useFetchUser(state.username);
+	const { isUser } = useVerifyUser(state.username);
+	const [following, setFollowing] = useState<boolean>(false);
+	const [header, setHeader] = useState<string | null | undefined>(null);
+	const [pfp, setPfp] = useState<string | null | undefined>(null);
+
+	useEffect(() => {
+		if (!currentUser) return;
+
+		setFollowing(Boolean(currentUser.isFollowing));
+		setHeader(currentUser.profile_header);
+		setPfp(currentUser.pfp);
+	}, [currentUser]);
 
 	return (
 		(currentUser ?
@@ -52,7 +55,10 @@ function ProfilePage() {
 						onSubmit={async (e) => {
 							e.preventDefault();
 							const data = await user.updateUserAccount(e, currentUser.username);
-							if (data.pfp || data.pfp === null) setAppPfp(data.pfp);
+							if (data.pfp || data.pfp === null) {
+								setPfp(data.pfp ?? '');
+								setAppPfp(data.pfp ?? '');
+							}
 						}}
 					>
 						<input
@@ -104,13 +110,13 @@ function ProfilePage() {
 							<div
 								className='flex items-center justify-center relative z-10'
 							>
-								{isUser && appPfp || !isUser && currentUser.pfp ?
+								{pfp ?
 									<div
-										className='border-[2px] border-black rounded-full'
+										className='rounded-full'
 									>
 										<img
 											className='w-[120px] h-[120px] rounded-full object-cover'
-											src={isUser ? appPfp ?? '' : currentUser.pfp}
+											src={pfp}
 										/>
 									</div>
 									:
@@ -120,7 +126,7 @@ function ProfilePage() {
 										account_circle
 									</span>
 								}
-								{pfpHover && appPfp && isUser ?
+								{pfpHover && pfp && isUser ?
 									<button
 										className='w-8 h-8 absolute border-[2px] border-black rounded-full top-0 right-0 text-stone-100 bg-red-500'
 										onClick={async (e) => {
@@ -141,7 +147,7 @@ function ProfilePage() {
 							onSubmit={async (e) => {
 								e.preventDefault();
 								const data = await user.updateUserAccount(e, currentUser.username);
-								if (data.header || data.header === null) changeHeader(data.header);
+								if (data.header || data.header === null) setHeader(data.header);
 							}}
 						>
 							<input
@@ -228,10 +234,10 @@ function ProfilePage() {
 										onClick={async () => {
 											if (following) {
 												const res: Response = await user.unfollow(null, currentUser.username);
-												if (res.ok) changeFollowing(false);
+												if (res.ok) setFollowing(false);
 											} else {
 												const res: Response = await user.follow(null, currentUser.username);
-												if (res.ok) changeFollowing(true);
+												if (res.ok) setFollowing(true);
 											}
 										}}
 									>
