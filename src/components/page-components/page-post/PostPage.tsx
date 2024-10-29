@@ -15,14 +15,15 @@ function PostPage() {
 		currentPost,
 		loading,
 		postError,
-		postRefetch
+		postRefetch,
+		postId
 	] = useFetchPost(id);
 	const {
 		comments,
 		repliesLoading,
 		repliesError,
 		repliesRefetch
-	} = useFetchReplies(id, commentCount, 'Post');
+	} = useFetchReplies(postId, commentCount, 'Post');
 
 	function createComments(commentArr: PostInterface[]): JSX.Element[] {
 		const commentElements: JSX.Element[] = [];

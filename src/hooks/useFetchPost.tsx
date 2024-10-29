@@ -6,7 +6,8 @@ function useFetchPost(id: string): [
 	PostInterface | null,
 	boolean,
 	unknown,
-	() => Promise<void>
+	() => Promise<void>,
+	string | undefined
 ] {
 	const [currentPost, setCurrentPost] = useState<PostInterface | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -34,7 +35,13 @@ function useFetchPost(id: string): [
 		fetchPost();
 	}, [fetchPost]);
 
-	return [currentPost, loading, postError, fetchPost];
+	return [
+		currentPost,
+		loading,
+		postError,
+		fetchPost,
+		currentPost?.post_data.post_id
+	];
 }
 
 export default useFetchPost;
