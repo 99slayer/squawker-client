@@ -4,11 +4,18 @@ import { v4 as uuid } from 'uuid';
 import { PostInterface } from '../../../types';
 import Component from '../../Component';
 import useFetchPosts from '../../../hooks/useFetchPosts';
+import Spinner from '../../Spinner';
+import Err from '../../Err';
 
 function ProfilePosts() {
 	const { state } = useLocation();
 	const [postCount, setPostCount] = useState<number>(0);
-	const { posts } = useFetchPosts(state.username, postCount);
+	const {
+		posts,
+		loading,
+		postsError,
+		refetch
+	} = useFetchPosts(state.username, postCount);
 
 	function createPosts(postArr: PostInterface[]): JSX.Element[] {
 		const postElements: JSX.Element[] = [];
@@ -21,29 +28,24 @@ function ProfilePosts() {
 		return postElements;
 	}
 
-	return (
-		(posts.length > 0 ?
-			<div
-				className='flex flex-col'
-			>
-				<ul className='pt-2 flex flex-col'>
-					{createPosts(posts)}
-				</ul>
-				{postCount > posts.length ?
-					<></> :
-					<button
-						className='p-2 border-[2px] border-black self-center'
-						onClick={() => {
-							setPostCount(prev => prev + 10);
-						}}
-					>
-						GET MORE
-					</button>
-				}
-			</div>
-			:
-			<div>THIS USER HAS NO POSTS</div>
-		)
+	return (postsError ?
+		<Err refetch={refetch} /> :
+		<div className='flex flex-col'>
+			<ul className='pt-2 flex flex-col'>
+				{createPosts(posts)}
+			</ul>
+			{loading ?
+				<Spinner /> :
+				<button
+					className='p-2 border-[2px] border-black self-center'
+					onClick={() => {
+						setPostCount(prev => prev + 10);
+					}}
+				>
+					GET MORE
+				</button>
+			}
+		</div>
 	);
 }
 

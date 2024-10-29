@@ -4,24 +4,35 @@ import { user } from '../api/api';
 
 function useFetchFollowers(username: string, userCount: number = 0) {
 	const [users, setUsers] = useState<ConnectCardData[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [error, setError] = useState<unknown>(null);
 
 	const fetchFollowers = useCallback(async () => {
-		if (!username) return;
+		setLoading(true);
+		setError(null);
 
-		const res: Response = await user
-			.getUserFollowers(null, username, userCount);
-		const data: ConnectCardData[] = await res.json();
-		setUsers(prev => {
-			if (prev[0]?.username === data[0]?.username) return prev;
-			return [...prev, ...data];
-		});
+		try {
+			if (!username) throw new Error('Problem fetching followers.');
+
+			const res: Response = await user
+				.getUserFollowers(null, username, userCount);
+			const data: ConnectCardData[] = await res.json();
+			setUsers(prev => {
+				if (prev[0]?.username === data[0]?.username) return prev;
+				return [...prev, ...data];
+			});
+		} catch (err) {
+			setError(err);
+		} finally {
+			setLoading(false);
+		}
 	}, [username, userCount]);
 
 	useEffect(() => {
 		fetchFollowers();
 	}, [fetchFollowers]);
 
-	return { users };
+	return { users, loading, error, refetch: fetchFollowers };
 }
 
 export default useFetchFollowers;

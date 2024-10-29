@@ -5,7 +5,7 @@ function useVerifyUser(username: string) {
 	const [isUser, setIsUser] = useState<boolean>(false);
 
 	const verifyUser = useCallback(async () => {
-		if (!username) return;
+		if (!username) throw new Error('Problem verifying user.');
 
 		const res: Response = await auth.verify(null, username);
 		const data: boolean = await res.json();

@@ -2,22 +2,39 @@ import { useCallback, useEffect, useState } from 'react';
 import { post } from '../api/api';
 import { PostInterface } from '../types';
 
-function useFetchPost(id: string) {
+function useFetchPost(id: string): [
+	PostInterface | null,
+	boolean,
+	unknown,
+	() => Promise<void>
+] {
 	const [currentPost, setCurrentPost] = useState<PostInterface | null>(null);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [postError, setError] = useState<unknown>(null);
 
 	const fetchPost = useCallback(async () => {
-		if (!id) return;
+		setLoading(true);
+		setError(null);
 
-		const res: Response = await post.getPost(null, id);
-		const data: PostInterface = await res.json();
-		setCurrentPost(data);
+		try {
+			if (!id) throw new Error('Problem fetching post.');
+
+			const res: Response = await post.getPost(null, id);
+			const data: PostInterface = await res.json();
+			setCurrentPost(data);
+		} catch (err) {
+			setError(err);
+		} finally {
+			setLoading(false);
+		}
+
 	}, [id]);
 
 	useEffect(() => {
 		fetchPost();
 	}, [fetchPost]);
 
-	return [currentPost];
+	return [currentPost, loading, postError, fetchPost];
 }
 
 export default useFetchPost;
