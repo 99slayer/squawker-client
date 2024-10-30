@@ -42,12 +42,17 @@ function ProfileReplies() {
 			</ul>
 			{loading ?
 				<Spinner /> :
-				<button
-					className='p-2 border-[2px] border-black self-center'
-					onClick={() => { setCommentCount(prev => prev + 10); }}
-				>
-					GET MORE
-				</button>
+				<div className='self-center'>
+					{commentCount !== commentGroups.length ?
+						<button
+							className='p-2 border-[2px] border-black'
+							onClick={() => setCommentCount(commentGroups.length)}
+						>
+							GET MORE
+						</button>
+						: <></>
+					}
+				</div>
 			}
 		</div>
 	);

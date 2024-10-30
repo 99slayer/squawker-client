@@ -36,12 +36,17 @@ function HomePage() {
 			</ul>
 			{loading ?
 				<Spinner /> :
-				<button
-					className='p-2 border-[2px] border-black self-center'
-					onClick={() => setPostCount(prev => prev + 10)}
-				>
-					GET MORE
-				</button>
+				<div className='self-center'>
+					{postCount !== posts.length ?
+						<button
+							className='p-2 border-[2px] border-black'
+							onClick={() => setPostCount(posts.length)}
+						>
+							GET MORE
+						</button>
+						: <></>
+					}
+				</div>
 			}
 		</div>
 	);

@@ -54,12 +54,17 @@ function CommentPage() {
 							</ul>
 							{repliesLoading ?
 								<Spinner /> :
-								<button
-									className='p-2 border-[2px] border-black self-center'
-									onClick={() => { setCommentCount(prev => prev + 10); }}
-								>
-									GET MORE
-								</button>
+								<div className='self-center'>
+									{commentCount !== comments.length ?
+										<button
+											className='p-2 border-[2px] border-black'
+											onClick={() => setCommentCount(comments.length)}
+										>
+											GET MORE
+										</button>
+										: <></>
+									}
+								</div>
 							}
 						</div>
 					}

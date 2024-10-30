@@ -28,12 +28,17 @@ function ConnectPage() {
 			</ul>
 			{loading ?
 				<Spinner /> :
-				<button
-					className='p-2 border-[2px] border-black self-center'
-					onClick={() => setUserCount(prev => prev + 10)}
-				>
-					GET MORE
-				</button>
+				<div className='self-center'>
+					{userCount !== users.length ?
+						<button
+							className='p-2 border-[2px] border-black'
+							onClick={() => setUserCount(users.length)}
+						>
+							GET MORE
+						</button>
+						: <></>
+					}
+				</div>
 			}
 		</div>
 	);
