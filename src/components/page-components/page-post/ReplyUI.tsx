@@ -2,6 +2,8 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { comment } from '../../../api/api';
 import { upload } from '../../../supabase';
+import { createValidationErrors as cve } from '../../componentUtil';
+import { ReturnDataInterface } from '../../../types';
 
 function ReplyUI({ id }: { id: string | null }) {
 	const navigate = useNavigate();
@@ -18,6 +20,7 @@ function ReplyUI({ id }: { id: string | null }) {
 		folder: null
 	});
 	const [disabled, setDisabled] = useState<boolean>(false);
+	const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
 
 	const clearForm = () => {
 		textRef.current!.value = '';
@@ -36,9 +39,10 @@ function ReplyUI({ id }: { id: string | null }) {
 
 						if (textRef.current!.value || fileRef.current!.value) {
 							const res: Response = await comment.createComment(e, id);
+							const data: ReturnDataInterface = await res.json();
 
+							if (data.errors) setValidationErrors(data.errors);
 							if (res.ok) {
-								const data: { _id: string } = await res.json();
 								clearForm();
 								navigate(
 									`/main/status/comment/${data._id}`,
@@ -55,12 +59,26 @@ function ReplyUI({ id }: { id: string | null }) {
 						setDisabled(false);
 					}}
 				>
-					<textarea
-						className='w-[100%] min-h-24 p-2 resize-none rounded-xl border-[2px] border-black'
-						ref={textRef}
-						name='text'
-						placeholder='whats up?'
-					/>
+					<div>
+						<textarea
+							className='w-[100%] min-h-24 p-2 resize-none rounded-xl border-[2px] border-black'
+							ref={textRef}
+							name='text'
+							placeholder='whats up?'
+						/>
+						{validationErrors?.textErrors ?
+							<ul>
+								{cve(validationErrors.textErrors)}
+							</ul>
+							: <></>
+						}
+						{validationErrors?.imageErrors ?
+							<ul>
+								{cve(validationErrors.imageErrors)}
+							</ul>
+							: <></>
+						}
+					</div>
 					{image ?
 						<div
 							className='relative'
@@ -93,6 +111,8 @@ function ReplyUI({ id }: { id: string | null }) {
 							type='button'
 							onClick={(e) => {
 								e.preventDefault();
+								setValidationErrors(null);
+
 								const input: HTMLInputElement = document.createElement('input');
 								input.type = 'file';
 								input.name = 'image';
@@ -101,6 +121,14 @@ function ReplyUI({ id }: { id: string | null }) {
 									if (input.files === null) return;
 
 									const file: File = Array.from(input.files)[0];
+									const limit = 1000000 * 2;
+									if (file.size > limit) {
+										setValidationErrors({
+											imageErrors: [`File size cannot exceed ${limit / 1000000}MB.`]
+										});
+										throw new Error('to big lmao');
+									}
+
 									const arrayReader: FileReader = new FileReader();
 									const fileReader: FileReader = new FileReader();
 

@@ -8,13 +8,31 @@ export const AppContext = createContext<AppContextInterface | null>(null);
 
 function App() {
 	const navigate = useNavigate();
-	const [appUsername, setAppUsername] = useState<string>(localStorage.getItem('username') as string);
-	const [appNickname, setAppNickname] = useState<string>(localStorage.getItem('nickname') as string);
-	const [appPfp, setAppPfp] = useState<string | null>(localStorage.getItem('pfp') as string);
+	const [appUsername, setUsername] = useState<string>(localStorage.getItem('username') as string);
+	const [appNickname, setNickname] = useState<string>(localStorage.getItem('nickname') as string);
+	const [appPfp, setPfp] = useState<string | null>(localStorage.getItem('pfp') as string);
+
+	function setAppUsername(username: string) {
+		localStorage.setItem('username', username);
+		setUsername(username);
+	}
+
+	function setAppNickname(nickname: string) {
+		localStorage.setItem('nickname', nickname);
+		setNickname(nickname);
+	}
+
+	function setAppPfp(pfp: string) {
+		if (pfp === null) {
+			localStorage.setItem('pfp', '');
+		} else localStorage.setItem('pfp', pfp);
+
+		setPfp(pfp);
+	}
 
 	async function appLogout(e: RequestEvent): Promise<void> {
 		await logout(e);
-		setAppPfp(null);
+		setPfp(null);
 		navigate('/');
 	}
 

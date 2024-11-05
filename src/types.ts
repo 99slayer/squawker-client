@@ -78,17 +78,26 @@ export type ConnectCardData = {
 }
 
 export interface AppContextInterface {
-	appLogout: (e: RequestEvent) => Promise<void>,
-	appUsername: string,
-	setAppUsername: React.Dispatch<React.SetStateAction<string>>,
-	appNickname: string,
-	setAppNickname: React.Dispatch<React.SetStateAction<string>>,
-	appPfp: string | null,
-	setAppPfp: React.Dispatch<React.SetStateAction<string | null>>,
+	appLogout: (e: RequestEvent) => Promise<void>;
+	appUsername: string;
+	setAppUsername: (username: string) => void;
+	appNickname: string;
+	setAppNickname: (nickname: string) => void;
+	appPfp: string | null;
+	setAppPfp: (pfp: string) => void;
 }
 
 export interface MainContextInterface {
-	toggle: (ref: React.RefObject<HTMLDialogElement>) => void,
-	postRef: React.RefObject<HTMLDialogElement>,
-	setPostId: React.Dispatch<React.SetStateAction<string | null>>,
+	toggle: (ref: React.RefObject<HTMLDialogElement>) => void;
+	postRef: React.RefObject<HTMLDialogElement>;
+	setPostId: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export interface ReturnDataInterface {
+	username?: string;
+	nickname?: string;
+	pfp?: string;
+	_id?: string;
+	header?: string;
+	errors?: Record<string, string[]>;
 }

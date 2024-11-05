@@ -2,7 +2,7 @@ import React, { useContext, useRef } from 'react';
 import Component from '../../Component';
 import { user } from '../../../api/api';
 import { AppContext } from '../../../App';
-import { AppContextInterface } from '../../../types';
+import { AppContextInterface, ReturnDataInterface } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
@@ -43,15 +43,13 @@ function LoginPage() {
 					<button
 						className='px-2 border-2 border-black'
 						onClick={async (e) => {
-							const data: {
-								username: string,
-								nickname: string,
-								pfp: string
-							} = await user.createGuestUser(e);
-							setAppUsername(data.username);
-							setAppNickname(data.nickname);
-							setAppPfp(data.pfp);
-							navigate('/main');
+							const res: Response = await user.createGuestUser(e);
+							const data: ReturnDataInterface = await res.json();
+
+							if (data.username) setAppUsername(data.username);
+							if (data.nickname) setAppNickname(data.nickname);
+							if (data.pfp) setAppPfp(data.pfp);
+							if (res.ok) navigate('/main');
 						}}
 					>
 						LOGIN AS GUEST

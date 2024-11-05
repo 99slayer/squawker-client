@@ -7,11 +7,17 @@ import React, {
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { post } from '../../api/api';
-import { AppContextInterface, FormEvent, PostInterface } from '../../types';
+import {
+	AppContextInterface,
+	FormEvent,
+	PostInterface,
+	ReturnDataInterface
+} from '../../types';
 import { formatDate } from '../../util';
 import { upload } from '../../supabase';
 import { AppContext } from '../../App';
 import useFetchPost from '../../hooks/useFetchPost';
+import { createValidationErrors as cve } from '../componentUtil';
 
 type Props = {
 	toggle: (ref: React.RefObject<HTMLDialogElement>) => void;
@@ -39,6 +45,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 		});
 		const [disabled, setDisabled] = useState<boolean>(false);
 		const [quotedPost]: (PostInterface | null)[] = useFetchPost(postId as string);
+		const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
 
 		const clearForm = () => {
 			textRef.current!.value = '';
@@ -68,9 +75,10 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 
 							if (textRef.current!.value || fileRef.current!.value) {
 								const res: Response = await post.createPost(e, postId);
+								const data: ReturnDataInterface = await res.json();
 
+								if (data.errors) setValidationErrors(data.errors);
 								if (res.ok) {
-									const data: { _id: string } = await res.json();
 									navigate(
 										`/main/status/post/${data._id}`,
 										{
@@ -99,12 +107,26 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 									account_circle
 								</span>
 							}
-							<textarea
-								className='w-[100%] min-h-24 p-2 resize-none rounded-xl'
-								ref={textRef}
-								name='text'
-								placeholder='whats up?'
-							/>
+							<div className='flex-1 flex flex-col'>
+								<textarea
+									className='w-[100%] min-h-24 p-2 resize-none rounded-xl'
+									ref={textRef}
+									name='text'
+									placeholder='whats up?'
+								/>
+								{validationErrors?.textErrors ?
+									<ul>
+										{cve(validationErrors.textErrors)}
+									</ul>
+									: <></>
+								}
+								{validationErrors?.imageErrors ?
+									<ul>
+										{cve(validationErrors.imageErrors)}
+									</ul>
+									: <></>
+								}
+							</div>
 						</div>
 						{image ?
 							<div
@@ -186,6 +208,14 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 										if (input.files === null) return;
 
 										const file: File = Array.from(input.files)[0];
+										const limit = 1000000 * 2;
+										if (file.size > limit) {
+											setValidationErrors({
+												imageErrors: [`File size cannot exceed ${limit / 1000000}MB.`]
+											});
+											throw new Error('to big lmao');
+										}
+
 										const arrayReader: FileReader = new FileReader();
 										const fileReader: FileReader = new FileReader();
 

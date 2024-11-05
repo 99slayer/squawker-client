@@ -2,13 +2,14 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { user } from '../../../api/api';
 import { formatDate } from '../../../util';
-import { AppContextInterface } from '../../../types';
+import { AppContextInterface, ReturnDataInterface } from '../../../types';
 import { AppContext } from '../../../App';
 import { clearUpload, upload } from '../../../supabase';
 import useFetchUser from '../../../hooks/useFetchUser';
 import useVerifyUser from '../../../hooks/useVerifyUser';
 import Spinner from '../../Spinner';
 import Err from '../../Err';
+import { createValidationErrors as cve } from '../../componentUtil';
 
 function ProfilePage() {
 	const { state } = useLocation();
@@ -28,6 +29,7 @@ function ProfilePage() {
 	const [following, setFollowing] = useState<boolean>(false);
 	const [header, setHeader] = useState<string | null | undefined>(null);
 	const [pfp, setPfp] = useState<string | null | undefined>(null);
+	const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
 
 	useEffect(() => {
 		if (!currentUser) return;
@@ -59,11 +61,29 @@ function ProfilePage() {
 							<p>{`${currentUser!.post_count} posts`}</p>
 						</div>
 					</header>
-					<div className="border-r-2 border-b-2 border-l-2 border-black">
+					<div className="relative border-r-2 border-b-2 border-l-2 border-black">
+						{validationErrors ?
+							<div
+								className='p-2 top-2 left-2 z-50 border-[2px] border-black absolute bg-white'
+							>
+								{validationErrors.pfpErrors ?
+									<ul>
+										{cve(validationErrors.pfpErrors ?? [])}
+									</ul>
+									:
+									<ul>
+										{cve(validationErrors.headerErrors ?? [])}
+									</ul>
+								}
+							</div>
+							: <></>
+						}
 						<form
 							onSubmit={async (e) => {
 								e.preventDefault();
-								const data = await user.updateUserAccount(e, currentUser!.username);
+								const res: Response = await user.updateUserAccount(e, currentUser!.username);
+								const data: ReturnDataInterface = await res.json();
+
 								if (data.pfp || data.pfp === null) {
 									setPfp(data.pfp ?? '');
 									setAppPfp(data.pfp ?? '');
@@ -77,8 +97,9 @@ function ProfilePage() {
 								accept='image/jpeg image/png'
 							/>
 							<span
-								className={`absolute top-[200px] left-3 ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
+								className={`absolute top-[140px] left-3 ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
 								onClick={(e) => {
+									setValidationErrors(null);
 									if (!isUser) return;
 									e.preventDefault();
 									const input: HTMLInputElement = document.createElement('input');
@@ -87,7 +108,16 @@ function ProfilePage() {
 									input.accept = 'image/jpeg, image/png';
 									input.onchange = () => {
 										if (input.files === null) return;
+
 										const file: File = Array.from(input.files)[0];
+										const limit = 1000000 * 2;
+										if (file.size > limit) {
+											setValidationErrors({
+												pfpErrors: [`File size cannot exceed ${limit / 1000000}MB.`]
+											});
+											throw new Error('to big lmao');
+										}
+
 										const arrayReader: FileReader = new FileReader();
 										arrayReader.onload = async (e) => {
 											if (!e.target) return;
@@ -150,7 +180,8 @@ function ProfilePage() {
 							<form
 								onSubmit={async (e) => {
 									e.preventDefault();
-									const data = await user.updateUserAccount(e, currentUser!.username);
+									const res: Response = await user.updateUserAccount(e, currentUser!.username);
+									const data: ReturnDataInterface = await res.json();
 									if (data.header || data.header === null) setHeader(data.header);
 								}}
 							>
@@ -163,6 +194,7 @@ function ProfilePage() {
 								<div
 									className={`h-[200px] border-b-[2px] flex border-black ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
 									onClick={(e) => {
+										setValidationErrors(null);
 										if (!isUser) return;
 										e.preventDefault();
 										const input: HTMLInputElement = document.createElement('input');
@@ -171,7 +203,16 @@ function ProfilePage() {
 										input.accept = 'image/jpeg, image/png';
 										input.onchange = () => {
 											if (input.files === null) return;
+
 											const file: File = Array.from(input.files)[0];
+											const limit = 1000000 * 2;
+											if (file.size > limit) {
+												setValidationErrors({
+													headerErrors: [`File size cannot exceed ${limit / 1000000}MB.`]
+												});
+												throw new Error('to big lmao');
+											}
+
 											const arrayReader: FileReader = new FileReader();
 											arrayReader.onload = async (e) => {
 												if (!e.target) return;

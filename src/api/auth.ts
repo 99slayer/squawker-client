@@ -17,16 +17,7 @@ export async function login(e: FormEvent) {
 	}
 
 	const apiRes: Response = await request(e, { payload: true }, req);
-	const data: {
-		username: string,
-		nickname: string,
-		pfp: string
-	} = await apiRes.json();
-	localStorage.setItem('username', data.username);
-	localStorage.setItem('nickname', data.nickname);
-	localStorage.setItem('pfp', data.pfp ?? '');
-
-	return data;
+	return apiRes;
 }
 
 export async function logout(e: RequestEvent) {

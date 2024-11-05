@@ -3,8 +3,13 @@ import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { formatDate } from '../../util';
 import { comment, like, post } from '../../api/api';
 import { MainContext } from './page-main/MainTemplate';
-import { MainContextInterface, PostInterface } from '../../types';
+import {
+	MainContextInterface,
+	PostInterface,
+	ReturnDataInterface
+} from '../../types';
 import { clearUpload } from '../../supabase';
+import { createValidationErrors as cve } from '../componentUtil';
 
 function Post({ data }: { data: PostInterface | null }) {
 	const location = useLocation();
@@ -15,6 +20,7 @@ function Post({ data }: { data: PostInterface | null }) {
 	const [liked, setLiked] = useState<boolean>(false);
 	const [likeCount, setLikeCount] = useState<number | undefined>(0);
 	const [deleted, setDeleted] = useState<boolean>(false);
+	const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
 
 	useEffect(() => {
 		if (!data) return;
@@ -116,25 +122,51 @@ function Post({ data }: { data: PostInterface | null }) {
 							<form
 								className='flex flex-col gap-2 relative'
 								onSubmit={async (e) => {
+									setValidationErrors(null);
+
 									if (data.post_type === 'Post') {
 										const res: Response = await post.updatePost(e, data._id);
-										if (res.ok) setEditText(textRef.current!.value);
-										setOpenEdit(false);
+										try {
+											const text: string = await res.text();
+											const data: ReturnDataInterface = JSON.parse(text);
+											if (data.errors) setValidationErrors(data.errors);
+										} catch {
+											if (res.ok) {
+												setEditText(textRef.current!.value);
+												setOpenEdit(false);
+											}
+										}
 									} else if (data.post_type === 'Comment') {
 										const res: Response = await comment.updateComment(e, data._id);
-										if (res.ok) setEditText(textRef.current!.value);
-										setOpenEdit(false);
+										try {
+											const text: string = await res.text();
+											const data: ReturnDataInterface = JSON.parse(text);
+											if (data.errors) setValidationErrors(data.errors);
+										} catch {
+											if (res.ok) {
+												setEditText(textRef.current!.value);
+												setOpenEdit(false);
+											}
+										}
 									}
 								}}
 							>
-								<textarea
-									className='w-[100%] p-2 pr-[44px] border-[2px] border-black'
-									ref={textRef}
-									name='text'
-									defaultValue={editText ?? data.post.text}
-									autoFocus
-									onClick={(e) => e.stopPropagation()}
-								/>
+								<div>
+									<textarea
+										className='w-[100%] p-2 pr-[44px] border-[2px] border-black'
+										ref={textRef}
+										name='text'
+										defaultValue={editText ?? data.post.text}
+										autoFocus
+										onClick={(e) => e.stopPropagation()}
+									/>
+									{validationErrors?.textErrors ?
+										<ul>
+											{cve(validationErrors.textErrors)}
+										</ul>
+										: <></>
+									}
+								</div>
 								<button
 									className='ml-auto px-2 border-[2px] border-black'
 									onClick={(e) => e.stopPropagation()}

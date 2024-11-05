@@ -1,8 +1,15 @@
-import { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
+import {
+	forwardRef,
+	useContext,
+	useImperativeHandle,
+	useRef,
+	useState
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../../App';
-import { AppContextInterface } from '../../types';
+import { AppContextInterface, ReturnDataInterface } from '../../types';
 import { user } from '../../api/api';
+import { createValidationErrors as cve } from '../componentUtil';
 
 type Props = {
 	toggle: (ref: React.RefObject<HTMLDialogElement>) => void;
@@ -16,6 +23,7 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(({ toggle }, forwardedR
 	const navigate = useNavigate();
 	const ref = useRef<HTMLDialogElement>(null);
 	useImperativeHandle(forwardedRef, () => ref.current as HTMLDialogElement);
+	const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
 
 	return (
 		<dialog
@@ -38,40 +46,72 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(({ toggle }, forwardedR
 					className='flex flex-col gap-4'
 					onSubmit={
 						async (e) => {
-							const data: {
-								username: string,
-								nickname: string
-							} = await user.createUser(e);
-							setAppUsername(data.username);
-							setAppNickname(data.nickname);
-							navigate('/main');
+							const res: Response = await user.createUser(e);
+							const data: ReturnDataInterface = await res.json();
+
+							if (data.username) setAppUsername(data.username);
+							if (data.nickname) setAppNickname(data.nickname);
+							if (data.errors) setValidationErrors(data.errors);
+							if (res.ok) navigate('/main');
 						}
 					}
 				>
-					<input
-						type='text'
-						name='username'
-						placeholder='username'
-						className='p-1'
-					/>
-					<input
-						type='text'
-						name='email'
-						placeholder='email'
-						className='p-1'
-					/>
-					<input
-						type='text'
-						name='password'
-						placeholder='password'
-						className='p-1'
-					/>
-					<input
-						type='text'
-						name='password-confirm'
-						placeholder='password confirm'
-						className='p-1'
-					/>
+					<div>
+						<input
+							type='text'
+							name='username'
+							placeholder='username'
+							className='p-1'
+						/>
+						{validationErrors?.usernameErrors ?
+							<ul>
+								{cve(validationErrors.usernameErrors)}
+							</ul>
+							: <></>
+						}
+					</div>
+					<div>
+						<input
+							type='text'
+							name='email'
+							placeholder='email'
+							className='p-1'
+						/>
+						{validationErrors?.usernameErrors ?
+							<ul>
+								{cve(validationErrors.emailErrors)}
+							</ul>
+							: <></>
+						}
+					</div>
+					<div>
+						<input
+							type='text'
+							name='password'
+							placeholder='password'
+							className='p-1'
+						/>
+						{validationErrors?.passwordErrors ?
+							<ul>
+								{cve(validationErrors.passwordErrors)}
+							</ul>
+							: <></>
+						}
+					</div>
+					<div>
+						<input
+							type='text'
+							name='password-confirm'
+							placeholder='password confirm'
+							className='p-1'
+						/>
+						{validationErrors?.['password-confirmErrors'] ?
+							<ul>
+								{cve(validationErrors['password-confirmErrors'])}
+							</ul>
+							: <></>
+						}
+					</div>
 					<button className='rounded-xl bg-gray-200'>login</button>
 				</form>
 			</div>

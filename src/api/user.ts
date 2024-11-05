@@ -136,16 +136,7 @@ export async function createUser(e: FormEvent) {
 	}
 
 	const apiRes: Response = await request(e, { payload: true }, req);
-	const data: {
-		username: string,
-		nickname: string,
-		pfp: string
-	} = await apiRes.json();
-	localStorage.setItem('username', data.username);
-	localStorage.setItem('nickname', data.nickname);
-	localStorage.setItem('pfp', data.pfp ?? '');
-
-	return data;
+	return apiRes;
 }
 
 export async function createGuestUser(e: RequestEvent) {
@@ -159,16 +150,7 @@ export async function createGuestUser(e: RequestEvent) {
 	}
 
 	const apiRes: Response = await request(e, {}, req);
-	const data: {
-		username: string,
-		nickname: string,
-		pfp: string
-	} = await apiRes.json();
-	localStorage.setItem('username', data.username);
-	localStorage.setItem('nickname', data.nickname);
-	localStorage.setItem('pfp', data.pfp ?? '');
-
-	return data;
+	return apiRes;
 }
 
 export async function updateUserAccount(
@@ -192,17 +174,7 @@ export async function updateUserAccount(
 	}
 
 	const apiRes: Response = await request(e, { payload: true, username }, req);
-	const data: {
-		username?: string,
-		nickname?: string,
-		pfp?: string,
-		header?: string
-	} = await apiRes.json();
-	if (data.username) localStorage.setItem('username', data.username);
-	if (data.nickname) localStorage.setItem('nickname', data.nickname);
-	if (data.pfp) localStorage.setItem('pfp', data.pfp);
-	if (data.pfp === null) localStorage.setItem('pfp', '');
-	return data;
+	return apiRes;
 }
 
 export async function updateUserSecurity(
