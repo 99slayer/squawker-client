@@ -1,14 +1,9 @@
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { comment } from '../../../api/api';
+import { useState } from 'react';
 import { upload } from '../../../supabase';
 import { createValidationErrors as cve } from '../../componentUtil';
-import { ReturnDataInterface } from '../../../types';
+import useCreatePost from '../../../hooks/useCreatePost';
 
 function ReplyUI({ id }: { id: string | null }) {
-	const navigate = useNavigate();
-	const textRef = useRef<HTMLTextAreaElement>(null);
-	const fileRef = useRef<HTMLInputElement>(null);
 	const [image, setImage] = useState<string | null>(null);
 	const [uploadData, setUpload] = useState<{
 		type: string | null,
@@ -20,7 +15,13 @@ function ReplyUI({ id }: { id: string | null }) {
 		folder: null
 	});
 	const [disabled, setDisabled] = useState<boolean>(false);
-	const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
+	const {
+		handleCreatePost,
+		textRef,
+		fileRef,
+		validationErrors,
+		setValidationErrors
+	} = useCreatePost();
 
 	const clearForm = () => {
 		textRef.current!.value = '';
@@ -36,26 +37,8 @@ function ReplyUI({ id }: { id: string | null }) {
 					className='my-2 flex flex-col items-stretch gap-2'
 					onSubmit={async (e) => {
 						e.preventDefault();
-
-						if (textRef.current!.value || fileRef.current!.value) {
-							const res: Response = await comment.createComment(e, id);
-							const data: ReturnDataInterface = await res.json();
-
-							if (data.errors) setValidationErrors(data.errors);
-							if (res.ok) {
-								clearForm();
-								navigate(
-									`/main/status/comment/${data._id}`,
-									{
-										state: {
-											id: data._id,
-											post_type: 'Comment'
-										}
-									}
-								);
-							}
-						}
-
+						const success: boolean = await handleCreatePost(e, id, 'Comment');
+						if (success) clearForm();
 						setDisabled(false);
 					}}
 				>

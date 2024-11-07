@@ -75,7 +75,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 						className='flex flex-col gap-2'
 						onSubmit={async (e: FormEvent) => {
 							e.preventDefault();
-							const success: boolean = await handleCreatePost(e, postId);
+							const success: boolean = await handleCreatePost(e, postId, 'Post');
 							if (success) toggle(ref);
 							setDisabled(false);
 						}}
@@ -185,6 +185,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 								type='button'
 								onClick={(e) => {
 									e.preventDefault();
+									setValidationErrors(null);
 									const input: HTMLInputElement = document.createElement('input');
 									input.type = 'file';
 									input.name = 'image';
