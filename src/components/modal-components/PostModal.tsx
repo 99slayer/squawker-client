@@ -5,18 +5,15 @@ import React, {
 	useRef,
 	useState
 } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { post } from '../../api/api';
 import {
 	AppContextInterface,
-	FormEvent,
-	PostInterface,
-	ReturnDataInterface
+	FormEvent
 } from '../../types';
 import { formatDate } from '../../util';
 import { upload } from '../../supabase';
 import { AppContext } from '../../App';
 import useFetchPost from '../../hooks/useFetchPost';
+import useCreatePost from '../../hooks/useCreatePost';
 import { createValidationErrors as cve } from '../componentUtil';
 
 type Props = {
@@ -29,10 +26,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 	({ toggle, postId, setPostId }, forwardedRef) => {
 		useImperativeHandle(forwardedRef, () => ref.current as HTMLDialogElement);
 		const { appPfp } = useContext(AppContext) as AppContextInterface;
-		const navigate = useNavigate();
 		const ref = useRef<HTMLDialogElement>(null);
-		const textRef = useRef<HTMLTextAreaElement>(null);
-		const fileRef = useRef<HTMLInputElement>(null);
 		const [image, setImage] = useState<string | null>(null);
 		const [uploadData, setUpload] = useState<{
 			type: string | null,
@@ -44,8 +38,14 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			folder: null
 		});
 		const [disabled, setDisabled] = useState<boolean>(false);
-		const [quotedPost]: (PostInterface | null)[] = useFetchPost(postId as string);
-		const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
+		const [quotedPost] = useFetchPost(postId as string);
+		const {
+			handleCreatePost,
+			textRef,
+			fileRef,
+			validationErrors,
+			setValidationErrors
+		} = useCreatePost();
 
 		const clearForm = () => {
 			textRef.current!.value = '';
@@ -63,7 +63,10 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			>
 				<div className='flex flex-col gap-4'>
 					<button
-						onClick={() => toggle(ref)}
+						onClick={() => {
+							setValidationErrors(null);
+							toggle(ref);
+						}}
 						className='size-5 flex justify-center items-center self-end bg-white'
 					>
 						X
@@ -72,26 +75,8 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 						className='flex flex-col gap-2'
 						onSubmit={async (e: FormEvent) => {
 							e.preventDefault();
-
-							if (textRef.current!.value || fileRef.current!.value) {
-								const res: Response = await post.createPost(e, postId);
-								const data: ReturnDataInterface = await res.json();
-
-								if (data.errors) setValidationErrors(data.errors);
-								if (res.ok) {
-									navigate(
-										`/main/status/post/${data._id}`,
-										{
-											state: {
-												id: data._id,
-												post_type: 'Post'
-											}
-										}
-									);
-									toggle(ref);
-								}
-							}
-
+							const success: boolean = await handleCreatePost(e, postId);
+							if (success) toggle(ref);
 							setDisabled(false);
 						}}
 					>
