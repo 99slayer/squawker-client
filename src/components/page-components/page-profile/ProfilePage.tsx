@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { user } from '../../../api/api';
 import { formatDate } from '../../../util';
-import { AppContextInterface, ReturnDataInterface } from '../../../types';
+import { AppContextInterface } from '../../../types';
 import { AppContext } from '../../../App';
 import { clearUpload, upload } from '../../../supabase';
 import useFetchUser from '../../../hooks/useFetchUser';
@@ -10,34 +10,44 @@ import useVerifyUser from '../../../hooks/useVerifyUser';
 import Spinner from '../../Spinner';
 import Err from '../../Err';
 import { createValidationErrors as cve } from '../../componentUtil';
+import useUpdateUser from '../../../hooks/useUpdateUser';
 
 function ProfilePage() {
 	const { state } = useLocation();
 	const navigate = useNavigate();
-	const { setAppPfp } = useContext(AppContext) as AppContextInterface;
+	const { appPfp } = useContext(AppContext) as AppContextInterface;
 	const headerRef = useRef<HTMLInputElement>(null);
 	const pfpRef = useRef<HTMLInputElement>(null);
-	const [pfpHover, setPfpHover] = useState<boolean>(false);
-	const [headerHover, setHeaderHover] = useState<boolean>(false);
 	const {
 		currentUser,
 		loading,
 		userError,
 		refetch
 	} = useFetchUser(state.username);
+	const {
+		handleUpdateUser,
+		returnData,
+		validationErrors,
+		setValidationErrors
+	} = useUpdateUser();
 	const { isUser } = useVerifyUser(state.username);
 	const [following, setFollowing] = useState<boolean>(false);
 	const [header, setHeader] = useState<string | null | undefined>(null);
-	const [pfp, setPfp] = useState<string | null | undefined>(null);
-	const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
+	const [pfpHover, setPfpHover] = useState<boolean>(false);
+	const [headerHover, setHeaderHover] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (!currentUser) return;
 
 		setFollowing(Boolean(currentUser.isFollowing));
 		setHeader(currentUser.profile_header);
-		setPfp(currentUser.pfp);
 	}, [currentUser]);
+
+	useEffect(() => {
+		if (returnData?.header || returnData?.header === null) {
+			setHeader(returnData.header);
+		}
+	}, [returnData]);
 
 	return (loading ?
 		<Spinner /> :
@@ -81,13 +91,7 @@ function ProfilePage() {
 						<form
 							onSubmit={async (e) => {
 								e.preventDefault();
-								const res: Response = await user.updateUserAccount(e, currentUser!.username);
-								const data: ReturnDataInterface = await res.json();
-
-								if (data.pfp || data.pfp === null) {
-									setPfp(data.pfp ?? '');
-									setAppPfp(data.pfp ?? '');
-								}
+								handleUpdateUser(e);
 							}}
 						>
 							<input
@@ -106,6 +110,8 @@ function ProfilePage() {
 									input.type = 'file';
 									input.name = 'image';
 									input.accept = 'image/jpeg, image/png';
+									// is there a way to remove this listener v??
+									// needs to be gone after pfp change/error <===
 									input.onchange = () => {
 										if (input.files === null) return;
 
@@ -144,13 +150,13 @@ function ProfilePage() {
 								<div
 									className='flex items-center justify-center relative z-10'
 								>
-									{pfp ?
+									{appPfp ?
 										<div
 											className='rounded-full'
 										>
 											<img
 												className='w-[120px] h-[120px] rounded-full object-cover'
-												src={pfp}
+												src={appPfp}
 											/>
 										</div>
 										:
@@ -160,7 +166,7 @@ function ProfilePage() {
 											account_circle
 										</span>
 									}
-									{pfpHover && pfp && isUser ?
+									{pfpHover && appPfp && isUser ?
 										<button
 											className='w-8 h-8 absolute border-[2px] border-black rounded-full top-0 right-0 text-stone-100 bg-red-500'
 											onClick={async (e) => {
@@ -180,9 +186,7 @@ function ProfilePage() {
 							<form
 								onSubmit={async (e) => {
 									e.preventDefault();
-									const res: Response = await user.updateUserAccount(e, currentUser!.username);
-									const data: ReturnDataInterface = await res.json();
-									if (data.header || data.header === null) setHeader(data.header);
+									handleUpdateUser(e);
 								}}
 							>
 								<input

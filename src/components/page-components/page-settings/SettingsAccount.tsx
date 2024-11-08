@@ -1,17 +1,9 @@
-import { useContext, useState } from 'react';
-import { user } from '../../../api/api';
-import { AppContext } from '../../../App';
-import { AppContextInterface, ReturnDataInterface } from '../../../types';
 import Component from '../../Component';
 import { createValidationErrors as cve } from '../../componentUtil';
+import useUpdateUser from '../../../hooks/useUpdateUser';
 
 function SettingsAccount() {
-	const {
-		appUsername,
-		setAppUsername,
-		setAppNickname
-	} = useContext(AppContext) as AppContextInterface;
-	const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
+	const { handleUpdateUser, validationErrors } = useUpdateUser();
 
 	return (
 		<div className="p-2 flex-1">
@@ -19,13 +11,8 @@ function SettingsAccount() {
 			<form
 				className="flex flex-col items-stretch gap-2"
 				onSubmit={async (e) => {
-					const res: Response = await user.updateUserAccount(e, appUsername);
-					const data: ReturnDataInterface = await res.json();
-
-					if (data.username) setAppUsername(data.username);
-					if (data.nickname) setAppNickname(data.nickname);
-					if (data.errors) setValidationErrors(data.errors);
-					if (res.ok) window.location.reload();
+					const success: boolean = await handleUpdateUser(e);
+					if (success) window.location.reload();
 				}}
 			>
 				<div>
