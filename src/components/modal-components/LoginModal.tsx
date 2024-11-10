@@ -34,18 +34,28 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 						</button>
 					</div>
 					<form
-						className='flex flex-col gap-4'
+						className='flex flex-col gap-2'
 						onSubmit={
 							async (e: FormEvent) => handleLogin(e)
 						}
 					>
 						<div>
-							<input
-								type='text'
-								placeholder='username'
-								name='username'
-								className='p-1'
-							/>
+							<div
+								className='flex items-center'
+							>
+								<label
+									className='min-w-[100px]'
+									htmlFor='username'
+								>
+									Username
+								</label>
+								<input
+									type='text'
+									placeholder='Username'
+									name='username'
+									className='p-1'
+								/>
+							</div>
 							{validationErrors?.usernameErrors ?
 								<ul>
 									{cve(validationErrors.usernameErrors)}
@@ -54,12 +64,22 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 							}
 						</div>
 						<div>
-							<input
-								type='password'
-								placeholder='password'
-								name='password'
-								className='p-1'
-							/>
+							<div
+								className='flex items-center'
+							>
+								<label
+									className='min-w-[100px]'
+									htmlFor='password'
+								>
+									Password
+								</label>
+								<input
+									type='password'
+									placeholder='Password'
+									name='password'
+									className='p-1'
+								/>
+							</div>
 							{validationErrors?.passwordErrors ?
 								<ul>
 									{cve(validationErrors.passwordErrors)}
@@ -67,7 +87,7 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 								: <></>
 							}
 						</div>
-						<button className='rounded-xl bg-gray-200'>login</button>
+						<button className='px-4 self-end rounded-full bg-gray-200'>login</button>
 					</form>
 				</div>
 			</dialog>

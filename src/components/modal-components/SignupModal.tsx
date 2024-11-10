@@ -35,18 +35,28 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 						</button>
 					</div>
 					<form
-						className='flex flex-col gap-4'
+						className='flex flex-col gap-2'
 						onSubmit={
 							async (e: FormEvent) => handleSignup(e)
 						}
 					>
 						<div>
-							<input
-								type='text'
-								name='username'
-								placeholder='username'
-								className='p-1'
-							/>
+							<div
+								className='flex items-center'
+							>
+								<label
+									className='min-w-[140px]'
+									htmlFor='username'
+								>
+									Username
+								</label>
+								<input
+									type='text'
+									name='username'
+									placeholder='Username'
+									className='p-1'
+								/>
+							</div>
 							{validationErrors?.usernameErrors ?
 								<ul>
 									{cve(validationErrors.usernameErrors)}
@@ -55,12 +65,22 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 							}
 						</div>
 						<div>
-							<input
-								type='text'
-								name='email'
-								placeholder='email'
-								className='p-1'
-							/>
+							<div
+								className='flex items-center'
+							>
+								<label
+									className='min-w-[140px]'
+									htmlFor='email'
+								>
+									Email
+								</label>
+								<input
+									type='text'
+									name='email'
+									placeholder='Email'
+									className='p-1'
+								/>
+							</div>
 							{validationErrors?.usernameErrors ?
 								<ul>
 									{cve(validationErrors.emailErrors)}
@@ -69,12 +89,22 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 							}
 						</div>
 						<div>
-							<input
-								type='text'
-								name='password'
-								placeholder='password'
-								className='p-1'
-							/>
+							<div
+								className='flex items-center'
+							>
+								<label
+									className='min-w-[140px]'
+									htmlFor='password'
+								>
+									Password
+								</label>
+								<input
+									type='password'
+									name='password'
+									placeholder='Password'
+									className='p-1'
+								/>
+							</div>
 							{validationErrors?.passwordErrors ?
 								<ul>
 									{cve(validationErrors.passwordErrors)}
@@ -83,12 +113,22 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 							}
 						</div>
 						<div>
-							<input
-								type='text'
-								name='password-confirm'
-								placeholder='password confirm'
-								className='p-1'
-							/>
+							<div
+								className='flex items-center'
+							>
+								<label
+									className='min-w-[140px]'
+									htmlFor='password-confirm'
+								>
+									Password Confirm
+								</label>
+								<input
+									type='password'
+									name='password-confirm'
+									placeholder='Password Confirm'
+									className='p-1'
+								/>
+							</div>
 							{validationErrors?.['password-confirmErrors'] ?
 								<ul>
 									{cve(validationErrors['password-confirmErrors'])}
@@ -96,7 +136,7 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 								: <></>
 							}
 						</div>
-						<button className='rounded-xl bg-gray-200'>sign up</button>
+						<button className='px-4 self-end rounded-full bg-gray-200'>sign up</button>
 					</form>
 				</div>
 			</dialog>

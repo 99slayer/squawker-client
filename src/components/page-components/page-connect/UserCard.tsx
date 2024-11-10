@@ -26,7 +26,17 @@ function UserCard({ data }: { data: ConnectCardData }) {
 				});
 			}}
 		>
-			<span className="size-8 rounded-full bg-gray-700"></span>
+			<div>
+				{data.pfp ?
+					<img
+						className='w-[40px] h-[40px] rounded-full'
+						src={data.pfp} />
+					:
+					<span className="material-symbols-outlined text-[40px] rounded-full bg-white">
+						account_circle
+					</span>
+				}
+			</div>
 			<div className="flex-1 flex flex-col items-stretch gap-2">
 				<div className="flex items-center">
 					<div>
