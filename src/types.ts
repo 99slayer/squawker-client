@@ -70,6 +70,7 @@ export type FormEvent = React.FormEvent<HTMLFormElement>;
 export type ButtonClickEvent = React.MouseEvent<HTMLButtonElement>;
 
 export type ConnectCardData = {
+	_id: string;
 	username: string;
 	nickname: string;
 	pfp?: string;

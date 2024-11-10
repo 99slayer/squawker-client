@@ -4,10 +4,10 @@ import { PostInterface } from '../types';
 
 function useFetchPost(id: string): [
 	PostInterface | null,
-	boolean,
-	unknown,
-	() => Promise<void>,
-	string | undefined
+	boolean?,
+	unknown?,
+	(() => Promise<void>)?,
+	(string | undefined)?
 ] {
 	const [currentPost, setCurrentPost] = useState<PostInterface | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);

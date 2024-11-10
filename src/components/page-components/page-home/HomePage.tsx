@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { v4 as uuid } from 'uuid';
-import { PostInterface } from '../../../types';
-import Component from '../../Component';
 import useFetchTimeline from '../../../hooks/useFetchTimeline';
 import Spinner from '../../Spinner';
 import Err from '../../Err';
+import { createPostList } from '../../componentUtil';
 
 function HomePage() {
 	const [postCount, setPostCount] = useState<number>(0);
@@ -15,24 +13,13 @@ function HomePage() {
 		refetch
 	} = useFetchTimeline(postCount);
 
-	function createTimeline(postArr: PostInterface[]): JSX.Element[] | [] {
-		const postElements: JSX.Element[] = [];
-		postArr.map((post) => {
-			postElements.push(
-				<li key={uuid()}><Component.Post data={post} /></li>
-			);
-		});
-
-		return postElements;
-	}
-
 	return (timelineError ?
 		<Err refetch={refetch} /> :
 		<div
 			className='flex flex-col'
 		>
 			<ul className='flex flex-col'>
-				{createTimeline(posts)}
+				{createPostList(posts, 'Post')}
 			</ul>
 			{loading ?
 				<Spinner /> :

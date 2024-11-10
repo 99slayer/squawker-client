@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
-import { PostInterface } from '../../../types';
 import Component from '../../Component';
 import useFetchPost from '../../../hooks/useFetchPost';
 import useFetchReplies from '../../../hooks/useFetchReplies';
 import Err from '../../Err';
 import Spinner from '../../Spinner';
+import { createPostList } from '../../componentUtil';
 
 function PostPage() {
 	const { id }: { id: string } = useOutletContext();
@@ -25,17 +24,6 @@ function PostPage() {
 		repliesRefetch
 	} = useFetchReplies(postId, commentCount, 'Post');
 
-	function createComments(commentArr: PostInterface[]): JSX.Element[] {
-		const commentElements: JSX.Element[] = [];
-		commentArr.map((cmnt) => {
-			commentElements.push(
-				<li key={uuid()}><Component.Post data={cmnt} /></li>
-			);
-		});
-
-		return commentElements;
-	}
-
 	return (loading ?
 		<Spinner /> :
 		<div>
@@ -48,7 +36,7 @@ function PostPage() {
 						<Err refetch={repliesRefetch} /> :
 						<div className='flex flex-col'>
 							<ul className='flex flex-col'>
-								{createComments(comments)}
+								{createPostList(comments, 'Post')}
 							</ul>
 							{repliesLoading ?
 								<Spinner /> :
