@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import useFetchComments from '../../../hooks/useFetchComments';
-import Err from '../../Err';
-import Spinner from '../../Spinner';
+import hook from '../../../hooks/hooks';
 import { createPostList } from '../../componentUtil';
+import Component from '../../Component';
 
 function ProfileReplies() {
 	const { state } = useLocation();
@@ -13,16 +12,16 @@ function ProfileReplies() {
 		loading,
 		commentsError,
 		refetch
-	} = useFetchComments(state.username, commentCount);
+	} = hook.useFetchComments(state.username, commentCount);
 
 	return (commentsError ?
-		<Err refetch={refetch} /> :
+		<Component.Err refetch={refetch} /> :
 		<div className='flex flex-col'>
 			<ul className='pt-2 flex flex-col gap-4'>
 				{createPostList(commentGroups, 'CommentGroup')}
 			</ul>
 			{loading ?
-				<Spinner /> :
+				<Component.Spinner /> :
 				<div className='self-center'>
 					{commentCount !== commentGroups.length ?
 						<button

@@ -5,7 +5,7 @@ import React, {
 } from 'react';
 import { FormEvent } from '../../types';
 import { createValidationErrors as cve } from '../componentUtil';
-import useLogin from '../../hooks/useLogin';
+import hook from '../../hooks/hooks';
 
 type Props = {
 	toggle: (ref: React.RefObject<HTMLDialogElement>) => void;
@@ -15,7 +15,7 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 	({ toggle }, forwardedRef) => {
 		const ref = useRef<HTMLDialogElement>(null);
 		useImperativeHandle(forwardedRef, () => ref.current as HTMLDialogElement);
-		const { handleLogin, validationErrors } = useLogin();
+		const { handleLogin, validationErrors } = hook.useLogin();
 
 		return (
 			<dialog

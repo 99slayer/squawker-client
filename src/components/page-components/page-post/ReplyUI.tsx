@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { upload } from '../../../supabase';
+import hook from '../../../hooks/hooks';
 import { createValidationErrors as cve } from '../../componentUtil';
-import useCreatePost from '../../../hooks/useCreatePost';
 
 function ReplyUI({ id }: { id: string | null }) {
 	const [image, setImage] = useState<string | null>(null);
@@ -21,7 +21,7 @@ function ReplyUI({ id }: { id: string | null }) {
 		fileRef,
 		validationErrors,
 		setValidationErrors
-	} = useCreatePost();
+	} = hook.useCreatePost();
 
 	const clearForm = () => {
 		textRef.current!.value = '';

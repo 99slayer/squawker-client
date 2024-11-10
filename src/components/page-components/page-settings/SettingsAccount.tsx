@@ -1,9 +1,9 @@
 import Component from '../../Component';
+import hook from '../../../hooks/hooks';
 import { createValidationErrors as cve } from '../../componentUtil';
-import useUpdateUser from '../../../hooks/useUpdateUser';
 
 function SettingsAccount() {
-	const { handleUpdateUser, validationErrors } = useUpdateUser();
+	const { handleUpdateUser, validationErrors } = hook.useUpdateUser();
 
 	return (
 		<div className="p-2 flex-1">

@@ -5,12 +5,9 @@ import { formatDate } from '../../../util';
 import { AppContextInterface } from '../../../types';
 import { AppContext } from '../../../App';
 import { clearUpload, upload } from '../../../supabase';
-import useFetchUser from '../../../hooks/useFetchUser';
-import useVerifyUser from '../../../hooks/useVerifyUser';
-import Spinner from '../../Spinner';
-import Err from '../../Err';
+import hook from '../../../hooks/hooks';
 import { createValidationErrors as cve } from '../../componentUtil';
-import useUpdateUser from '../../../hooks/useUpdateUser';
+import Component from '../../Component';
 
 function ProfilePage() {
 	const { state } = useLocation();
@@ -23,14 +20,14 @@ function ProfilePage() {
 		loading,
 		userError,
 		refetch
-	} = useFetchUser(state.username);
+	} = hook.useFetchUser(state.username);
 	const {
 		handleUpdateUser,
 		returnData,
 		validationErrors,
 		setValidationErrors
-	} = useUpdateUser();
-	const { isUser } = useVerifyUser(state.username);
+	} = hook.useUpdateUser();
+	const { isUser } = hook.useVerifyUser(state.username);
 	const [following, setFollowing] = useState<boolean>(false);
 	const [header, setHeader] = useState<string | null | undefined>(null);
 	const [pfpHover, setPfpHover] = useState<boolean>(false);
@@ -50,10 +47,10 @@ function ProfilePage() {
 	}, [returnData]);
 
 	return (loading ?
-		<Spinner /> :
+		<Component.Spinner /> :
 		<div className='relative'>
 			{userError ?
-				<Err refetch={refetch} /> :
+				<Component.Err refetch={refetch} /> :
 				<div>
 					<header className="p-2 flex gap-4 sticky top-0 z-10 border-2 border-black bg-white">
 						<button

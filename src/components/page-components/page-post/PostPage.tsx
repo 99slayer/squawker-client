@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Component from '../../Component';
-import useFetchPost from '../../../hooks/useFetchPost';
-import useFetchReplies from '../../../hooks/useFetchReplies';
-import Err from '../../Err';
-import Spinner from '../../Spinner';
+import hook from '../../../hooks/hooks';
 import { createPostList } from '../../componentUtil';
 
 function PostPage() {
@@ -16,30 +13,30 @@ function PostPage() {
 		postError,
 		postRefetch,
 		postId
-	] = useFetchPost(id);
+	] = hook.useFetchPost(id);
 	const {
 		comments,
 		repliesLoading,
 		repliesError,
 		repliesRefetch
-	} = useFetchReplies(postId, commentCount, 'Post');
+	} = hook.useFetchReplies(postId, commentCount, 'Post');
 
 	return (loading ?
-		<Spinner /> :
+		<Component.Spinner /> :
 		<div>
 			{postError ?
-				<Err refetch={postRefetch} /> :
+				<Component.Err refetch={postRefetch} /> :
 				<div className='flex flex-col'>
 					<Component.Post data={currentPost} />
 					<Component.ReplyUI id={currentPost!.post_data.post_id} />
 					{repliesError ?
-						<Err refetch={repliesRefetch} /> :
+						<Component.Err refetch={repliesRefetch} /> :
 						<div className='flex flex-col'>
 							<ul className='flex flex-col'>
 								{createPostList(comments, 'Post')}
 							</ul>
 							{repliesLoading ?
-								<Spinner /> :
+								<Component.Spinner /> :
 								<div className='self-center'>
 									{commentCount !== comments.length ?
 										<button

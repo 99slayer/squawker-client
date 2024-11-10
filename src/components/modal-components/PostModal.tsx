@@ -12,8 +12,7 @@ import {
 import { formatDate } from '../../util';
 import { upload } from '../../supabase';
 import { AppContext } from '../../App';
-import useFetchPost from '../../hooks/useFetchPost';
-import useCreatePost from '../../hooks/useCreatePost';
+import hook from '../../hooks/hooks';
 import { createValidationErrors as cve } from '../componentUtil';
 
 type Props = {
@@ -38,14 +37,14 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			folder: null
 		});
 		const [disabled, setDisabled] = useState<boolean>(false);
-		const [quotedPost] = useFetchPost(postId as string);
+		const [quotedPost] = hook.useFetchPost(postId as string);
 		const {
 			handleCreatePost,
 			textRef,
 			fileRef,
 			validationErrors,
 			setValidationErrors
-		} = useCreatePost();
+		} = hook.useCreatePost();
 
 		const clearForm = () => {
 			textRef.current!.value = '';

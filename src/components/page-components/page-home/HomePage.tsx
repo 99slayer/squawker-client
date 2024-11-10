@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import useFetchTimeline from '../../../hooks/useFetchTimeline';
-import Spinner from '../../Spinner';
-import Err from '../../Err';
+import hook from '../../../hooks/hooks';
 import { createPostList } from '../../componentUtil';
+import Component from '../../Component';
 
 function HomePage() {
 	const [postCount, setPostCount] = useState<number>(0);
@@ -11,10 +10,10 @@ function HomePage() {
 		loading,
 		timelineError,
 		refetch
-	} = useFetchTimeline(postCount);
+	} = hook.useFetchTimeline(postCount);
 
 	return (timelineError ?
-		<Err refetch={refetch} /> :
+		<Component.Err refetch={refetch} /> :
 		<div
 			className='flex flex-col'
 		>
@@ -22,7 +21,7 @@ function HomePage() {
 				{createPostList(posts, 'Post')}
 			</ul>
 			{loading ?
-				<Spinner /> :
+				<Component.Spinner /> :
 				<div className='self-center'>
 					{postCount !== posts.length ?
 						<button

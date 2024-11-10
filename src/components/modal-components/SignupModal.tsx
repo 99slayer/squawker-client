@@ -4,7 +4,7 @@ import {
 	useRef
 } from 'react';
 import { createValidationErrors as cve } from '../componentUtil';
-import useSignup from '../../hooks/useSignup';
+import hook from '../../hooks/hooks';
 import { FormEvent } from '../../types';
 
 type Props = {
@@ -15,7 +15,7 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 	({ toggle }, forwardedRef) => {
 		const ref = useRef<HTMLDialogElement>(null);
 		useImperativeHandle(forwardedRef, () => ref.current as HTMLDialogElement);
-		const { handleSignup, validationErrors } = useSignup();
+		const { handleSignup, validationErrors } = hook.useSignup();
 
 		return (
 			<dialog

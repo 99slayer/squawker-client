@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import useFetchFollowing from '../../../hooks/useFetchFollowing';
-import Err from '../../Err';
-import Spinner from '../../Spinner';
+import hook from '../../../hooks/hooks';
 import { createUserCards } from '../../componentUtil';
+import Component from '../../Component';
 
 function Following() {
 	const { state } = useLocation();
@@ -13,16 +12,16 @@ function Following() {
 		loading,
 		error,
 		refetch
-	} = useFetchFollowing(state.username, userCount);
+	} = hook.useFetchFollowing(state.username, userCount);
 
 	return (error ?
-		<Err refetch={refetch} /> :
+		<Component.Err refetch={refetch} /> :
 		<div className='flex flex-col'>
 			<ul className="mt-2 flex flex-col gap-2">
 				{createUserCards(users)}
 			</ul>
 			{loading ?
-				<Spinner /> :
+				<Component.Spinner /> :
 				<div className='self-center'>
 					{userCount !== users.length ?
 						<button

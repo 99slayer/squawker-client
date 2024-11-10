@@ -26,6 +26,8 @@ import CommentDisplayGroup from './page-components/CommentDisplayGroup.tsx';
 import Post from './page-components/Post.tsx';
 import Back from './Back.tsx';
 import InvalidRoutePage from './InvalidRoutePage.tsx';
+import Spinner from './Spinner.tsx';
+import Err from './Err.tsx';
 
 const Component = {
 	App,
@@ -56,7 +58,9 @@ const Component = {
 	CommentDisplayGroup,
 	Post,
 	Back,
-	InvalidRoutePage
+	InvalidRoutePage,
+	Spinner,
+	Err
 };
 
 export default Component;
