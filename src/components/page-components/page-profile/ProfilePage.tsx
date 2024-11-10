@@ -150,13 +150,13 @@ function ProfilePage() {
 								<div
 									className='flex items-center justify-center relative z-10'
 								>
-									{appPfp ?
+									{(appPfp && isUser) || currentUser!.pfp ?
 										<div
 											className='rounded-full'
 										>
 											<img
 												className='w-[120px] h-[120px] rounded-full object-cover'
-												src={appPfp}
+												src={isUser ? appPfp as string : currentUser!.pfp}
 											/>
 										</div>
 										:
