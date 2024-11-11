@@ -18,20 +18,26 @@ function useSignup() {
 		setAppNickname
 	} = useContext(AppContext) as AppContextInterface;
 	const navigate = useNavigate();
-	const [validationErrors, setValidationErrors] = useState<Record<string, string[]> | null>(null);
+	const [validationErrors, setErrors] = useState<Record<string, string[]> | null>(null);
 
 	const handleSignup = useCallback(async (e: FormEvent) => {
-		setValidationErrors(null);
+		setErrors(null);
 		const res = await user.createUser(e);
 		const data: ReturnDataInterface = await res.json();
 
 		if (data.username) setAppUsername(data.username);
 		if (data.nickname) setAppNickname(data.nickname);
-		if (data.errors) setValidationErrors(data.errors);
+		if (data.errors) setErrors(data.errors);
 		if (res.ok) navigate('/main');
 	}, [navigate, setAppUsername, setAppNickname]);
 
-	return { handleSignup, validationErrors };
+	const setValidationErrors = useCallback(
+		(value: Record<string, string[]> | null) => {
+			setErrors(value);
+		}, []
+	);
+
+	return { handleSignup, validationErrors, setValidationErrors };
 }
 
 export default useSignup;

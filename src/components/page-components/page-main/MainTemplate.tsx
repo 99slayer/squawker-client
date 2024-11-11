@@ -12,6 +12,9 @@ function MainTemplate() {
 	const [postId, setPostId] = useState<string | null>(null);
 
 	function toggle(ref: React.RefObject<HTMLDialogElement>): void {
+		const form: HTMLFormElement | null = ref.current!.querySelector('form');
+		form!.reset();
+
 		if (ref.current?.hasAttribute('open')) {
 			ref.current.close();
 		} else {

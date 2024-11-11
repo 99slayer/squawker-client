@@ -46,26 +46,20 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 			setValidationErrors
 		} = hook.useCreatePost();
 
-		const clearForm = () => {
-			textRef.current!.value = '';
-			fileRef.current!.value = '';
-			setPostId(null);
-			setImage(null);
-			setUpload({ type: null, data: null, folder: null });
-		};
-
 		return (
 			<dialog
 				ref={ref}
 				className='w-[500px] max-w-[500px] p-2 translate-y-[-80px] border-2 border-black bg-gray-300'
-				onClose={() => clearForm()}
+				onClose={() => {
+					setPostId(null);
+					setImage(null);
+					setUpload({ type: null, data: null, folder: null });
+					setValidationErrors(null);
+				}}
 			>
 				<div className='flex flex-col gap-4'>
 					<button
-						onClick={() => {
-							setValidationErrors(null);
-							toggle(ref);
-						}}
+						onClick={() => toggle(ref)}
 						className='size-5 flex justify-center items-center self-end bg-white'
 					>
 						X
