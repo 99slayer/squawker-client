@@ -5,7 +5,12 @@ import { createUserCards } from '../../componentUtil';
 
 function ConnectPage() {
 	const [userCount, setUserCount] = useState<number>(0);
-	const { users, loading, error, refetch } = hook.useFetchUsers(userCount);
+	const {
+		users,
+		loading,
+		error,
+		refetch
+	} = hook.useFetchUsers(userCount);
 
 	return (error ?
 		<Component.Err refetch={refetch} /> :
@@ -17,14 +22,19 @@ function ConnectPage() {
 			{loading ?
 				<Component.Spinner /> :
 				<div className='self-center'>
-					{userCount !== users.length ?
-						<button
-							className='p-2 border-[2px] border-black'
-							onClick={() => setUserCount(users.length)}
-						>
-							GET MORE
-						</button>
-						: <></>
+					{users.length === 0 ?
+						<Component.Empty text='There are no users.' /> :
+						<div>
+							{userCount !== users.length ?
+								<button
+									className='p-2 border-[2px] border-black'
+									onClick={() => setUserCount(users.length)}
+								>
+									GET MORE
+								</button>
+								: <></>
+							}
+						</div>
 					}
 				</div>
 			}

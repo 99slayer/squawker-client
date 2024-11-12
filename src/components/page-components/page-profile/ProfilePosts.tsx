@@ -22,16 +22,20 @@ function ProfilePosts() {
 			</ul>
 			{loading ?
 				<Component.Spinner /> :
-				<div className='self-center'>
-					{postCount !== posts.length ?
-						<button
-							className='p-2 border-[2px] border-black'
-							onClick={() => setPostCount(posts.length)}
-						>
-							GET MORE
-						</button>
-						: <></>
-					}
+				<div>
+					{posts.length === 0 ?
+						<Component.Empty text={'User has no posts.'} /> :
+						<div className='self-center'>
+							{postCount !== posts.length ?
+								<button
+									className='p-2 border-[2px] border-black'
+									onClick={() => setPostCount(posts.length)}
+								>
+									GET MORE
+								</button>
+								: <></>
+							}
+						</div>}
 				</div>
 			}
 		</div>

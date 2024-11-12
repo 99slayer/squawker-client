@@ -40,14 +40,19 @@ function CommentPage() {
 							{repliesLoading ?
 								<Component.Spinner /> :
 								<div className='self-center'>
-									{commentCount !== comments.length ?
-										<button
-											className='p-2 border-[2px] border-black'
-											onClick={() => setCommentCount(comments.length)}
-										>
-											GET MORE
-										</button>
-										: <></>
+									{comments.length === 0 ?
+										<Component.Empty text={'This post has no comments.'} /> :
+										<div>
+											{commentCount !== comments.length ?
+												<button
+													className='p-2 border-[2px] border-black'
+													onClick={() => setCommentCount(comments.length)}
+												>
+													GET MORE
+												</button>
+												: <></>
+											}
+										</div>
 									}
 								</div>
 							}

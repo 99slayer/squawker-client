@@ -22,15 +22,25 @@ function HomePage() {
 			</ul>
 			{loading ?
 				<Component.Spinner /> :
-				<div className='self-center'>
-					{postCount !== posts.length ?
-						<button
-							className='p-2 border-[2px] border-black'
-							onClick={() => setPostCount(posts.length)}
-						>
-							GET MORE
-						</button>
-						: <></>
+				<div>
+					{posts.length === 0 ?
+						<Component.Empty
+							text={`
+								Your timeline is empty.
+								Check out the connect page to find other users.
+								`}
+						/> :
+						<div className='self-center'>
+							{postCount !== posts.length ?
+								<button
+									className='p-2 border-[2px] border-black'
+									onClick={() => setPostCount(posts.length)}
+								>
+									GET MORE
+								</button>
+								: <></>
+							}
+						</div>
 					}
 				</div>
 			}

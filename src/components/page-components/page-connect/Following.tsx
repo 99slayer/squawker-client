@@ -23,14 +23,19 @@ function Following() {
 			{loading ?
 				<Component.Spinner /> :
 				<div className='self-center'>
-					{userCount !== users.length ?
-						<button
-							className='p-2 border-[2px] border-black'
-							onClick={() => setUserCount(users.length)}
-						>
-							GET MORE
-						</button>
-						: <></>
+					{users.length === 0 ?
+						<Component.Empty text={'User is not following anyone.'} /> :
+						<div>
+							{userCount !== users.length ?
+								<button
+									className='p-2 border-[2px] border-black'
+									onClick={() => setUserCount(users.length)}
+								>
+									GET MORE
+								</button>
+								: <></>
+							}
+						</div>
 					}
 				</div>
 			}

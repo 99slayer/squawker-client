@@ -28,6 +28,7 @@ import Back from './Back.tsx';
 import InvalidRoutePage from './InvalidRoutePage.tsx';
 import Spinner from './Spinner.tsx';
 import Err from './Err.tsx';
+import Empty from './Empty.tsx';
 
 const Component = {
 	App,
@@ -60,7 +61,8 @@ const Component = {
 	Back,
 	InvalidRoutePage,
 	Spinner,
-	Err
+	Err,
+	Empty
 };
 
 export default Component;

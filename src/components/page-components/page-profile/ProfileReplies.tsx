@@ -22,16 +22,20 @@ function ProfileReplies() {
 			</ul>
 			{loading ?
 				<Component.Spinner /> :
-				<div className='self-center'>
-					{commentCount !== commentGroups.length ?
-						<button
-							className='p-2 border-[2px] border-black'
-							onClick={() => setCommentCount(commentGroups.length)}
-						>
-							GET MORE
-						</button>
-						: <></>
-					}
+				<div>
+					{commentGroups.length === 0 ?
+						<Component.Empty text={'User has no replies.'} /> :
+						<div className='self-center'>
+							{commentCount !== commentGroups.length ?
+								<button
+									className='p-2 border-[2px] border-black'
+									onClick={() => setCommentCount(commentGroups.length)}
+								>
+									GET MORE
+								</button>
+								: <></>
+							}
+						</div>}
 				</div>
 			}
 		</div>
