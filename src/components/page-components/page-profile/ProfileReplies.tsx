@@ -22,13 +22,13 @@ function ProfileReplies() {
 			</ul>
 			{loading ?
 				<Component.Spinner /> :
-				<div>
+				<div className='self-center'>
 					{commentGroups.length === 0 ?
 						<Component.Empty text={'User has no replies.'} /> :
-						<div className='self-center'>
+						<div>
 							{commentCount !== commentGroups.length ?
 								<button
-									className='p-2 border-[2px] border-black'
+									className='px-5 py-1 rounded-full hover:text-white hover:bg-gray-onyx font-semibold'
 									onClick={() => setCommentCount(commentGroups.length)}
 								>
 									GET MORE

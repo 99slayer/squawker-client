@@ -18,17 +18,17 @@ import ReplyUI from './page-components/page-post/ReplyUI.tsx';
 import ProfilePage from './page-components/page-profile/ProfilePage.tsx';
 import ProfilePosts from './page-components/page-profile/ProfilePosts.tsx';
 import ProfileReplies from './page-components/page-profile/ProfileReplies.tsx';
-import { Input, TextArea } from './page-components/page-settings/InputComponents.tsx';
 import SettingsAccount from './page-components/page-settings/SettingsAccount.tsx';
 import SettingsPage from './page-components/page-settings/SettingsPage.tsx';
 import SettingsSecurity from './page-components/page-settings/SettingsSecurity.tsx';
-import CommentDisplayGroup from './page-components/CommentDisplayGroup.tsx';
-import Post from './page-components/Post.tsx';
-import Back from './Back.tsx';
-import InvalidRoutePage from './InvalidRoutePage.tsx';
-import Spinner from './Spinner.tsx';
-import Err from './Err.tsx';
-import Empty from './Empty.tsx';
+import CommentDisplayGroup from './common-components/CommentDisplayGroup.tsx';
+import Post from './common-components/Post.tsx';
+import Back from './common-components/Back.tsx';
+import InvalidRoutePage from './page-components/page-invalid/InvalidRoutePage.tsx';
+import Spinner from './common-components/Spinner.tsx';
+import Err from './common-components/Err.tsx';
+import Empty from './common-components/Empty.tsx';
+import ValidationErrors from './common-components/ValidationErrors.tsx';
 
 const Component = {
 	App,
@@ -51,8 +51,6 @@ const Component = {
 	ProfilePage,
 	ProfilePosts,
 	ProfileReplies,
-	Input,
-	TextArea,
 	SettingsAccount,
 	SettingsPage,
 	SettingsSecurity,
@@ -62,7 +60,8 @@ const Component = {
 	InvalidRoutePage,
 	Spinner,
 	Err,
-	Empty
+	Empty,
+	ValidationErrors
 };
 
 export default Component;

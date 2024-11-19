@@ -6,7 +6,6 @@ import { AppContextInterface } from '../../../types';
 import { AppContext } from '../../../App';
 import { clearUpload, upload } from '../../../supabase';
 import hook from '../../../hooks/hooks';
-import { createValidationErrors as cve } from '../../componentUtil';
 import Component from '../../Component';
 
 function ProfilePage() {
@@ -52,8 +51,9 @@ function ProfilePage() {
 			{userError ?
 				<Component.Err refetch={refetch} /> :
 				<div>
-					<header className="p-2 flex gap-4 sticky top-0 z-10 border-2 border-black bg-white">
+					<header className='p-2 flex gap-4 sticky top-0 z-20 bg-black-night'>
 						<button
+							className='hover:text-white'
 							type='button'
 							onClick={() => {
 								navigate(-1);
@@ -64,24 +64,19 @@ function ProfilePage() {
 							</span>
 						</button>
 						<div>
-							<h1>{currentUser!.nickname}</h1>
+							<h1
+								className='overflow-hidden text-nowrap text-ellipsis'
+							>
+								{currentUser!.nickname}
+							</h1>
 							<p>{`${currentUser!.post_count} posts`}</p>
 						</div>
 					</header>
-					<div className="relative border-r-2 border-b-2 border-l-2 border-black">
+					<div className="relative">
 						{validationErrors ?
-							<div
-								className='p-2 top-2 left-2 z-50 border-[2px] border-black absolute bg-white'
-							>
-								{validationErrors.pfpErrors ?
-									<ul>
-										{cve(validationErrors.pfpErrors ?? [])}
-									</ul>
-									:
-									<ul>
-										{cve(validationErrors.headerErrors ?? [])}
-									</ul>
-								}
+							<div className='p-2 top-2 left-2 z-50 absolute'>
+								<Component.ValidationErrors errors={validationErrors.pfpErrors} />
+								<Component.ValidationErrors errors={validationErrors.headerErrors} />
 							</div>
 							: <></>
 						}
@@ -98,7 +93,7 @@ function ProfilePage() {
 								accept='image/jpeg image/png'
 							/>
 							<span
-								className={`absolute top-[140px] left-3 ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
+								className={`absolute top-[140px] left-8 ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
 								onClick={(e) => {
 									setValidationErrors(null);
 									if (!isUser) return;
@@ -107,8 +102,6 @@ function ProfilePage() {
 									input.type = 'file';
 									input.name = 'image';
 									input.accept = 'image/jpeg, image/png';
-									// is there a way to remove this listener v??
-									// needs to be gone after pfp change/error <===
 									input.onchange = () => {
 										if (input.files === null) return;
 
@@ -147,25 +140,23 @@ function ProfilePage() {
 								<div
 									className='flex items-center justify-center relative z-10'
 								>
-									{(appPfp && isUser) || currentUser!.pfp ?
-										<div
-											className='rounded-full'
-										>
+									<div className='flex rounded-full'>
+										{(appPfp && isUser) || currentUser!.pfp ?
 											<img
-												className='w-[120px] h-[120px] rounded-full object-cover'
+												className='size-[120px] rounded-full object-cover'
 												src={isUser ? appPfp as string : currentUser!.pfp}
 											/>
-										</div>
-										:
-										<span
-											className="material-symbols-outlined filled text-[120px] rounded-full bg-white"
-										>
-											account_circle
-										</span>
-									}
+											:
+											<span
+												className="material-symbols-outlined filled text-[120px] rounded-full bg-black-eerie-black"
+											>
+												account_circle
+											</span>
+										}
+									</div>
 									{pfpHover && appPfp && isUser ?
 										<button
-											className='w-8 h-8 absolute border-[2px] border-black rounded-full top-0 right-0 text-stone-100 bg-red-500'
+											className='size-5 flex justify-center items-center absolute top-1 right-1 rounded-full font-semibold hover:text-white bg-red-500'
 											onClick={async (e) => {
 												e.preventDefault();
 												e.stopPropagation();
@@ -193,7 +184,7 @@ function ProfilePage() {
 									accept='image/jpeg image/png'
 								/>
 								<div
-									className={`h-[200px] border-b-[2px] flex border-black ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
+									className={`h-[200px] flex ${isUser ? 'cursor-pointer' : 'cursor-default'}`}
 									onClick={(e) => {
 										setValidationErrors(null);
 										if (!isUser) return;
@@ -238,11 +229,11 @@ function ProfilePage() {
 									}}
 								>
 									<div
-										className='flex-1 flex relative'
+										className='flex-1 flex relative rounded-t-xl bg-gray-onyx'
 									>
 										{header ?
 											<img
-												className='w-[100%] object-cover'
+												className='w-[100%] rounded-t-xl object-cover'
 												src={header}
 											/>
 											:
@@ -250,7 +241,7 @@ function ProfilePage() {
 										}
 										{headerHover && header && isUser ?
 											<button
-												className='w-8 h-8 absolute border-[2px] border-black rounded-full top-2 right-2 text-stone-100 bg-red-500'
+												className='size-5 flex justify-center items-center absolute top-2 right-2 rounded-full font-semibold hover:text-white bg-red-500'
 												onClick={async (e) => {
 													e.preventDefault();
 													e.stopPropagation();
@@ -265,70 +256,71 @@ function ProfilePage() {
 									</div>
 								</div>
 							</form>
-							<div className="p-2 flex flex-col gap-2">
-								<div className="flex gap-2">
-									<button className="ml-auto p-1 border-2 border-black">...</button>
-									{!isUser ?
-										<button
-											className='p-1 border-2 border-black'
-											type='button'
-											onClick={async () => {
-												if (following) {
-													const res: Response = await user.unfollow(null, currentUser!.username);
-													if (res.ok) setFollowing(false);
-												} else {
-													const res: Response = await user.follow(null, currentUser!.username);
-													if (res.ok) setFollowing(true);
-												}
-											}}
-										>
-											{following ? 'Unfollow' : 'Follow'}
-										</button>
-										:
-										<></>
-									}
-								</div>
-								<h2 className="mt-6">{currentUser!.nickname}</h2>
+							<div className="p-4 pt-[44px] flex flex-col gap-2 relative rounded-b-xl bg-black-eerie-black">
+								{!isUser ?
+									<button
+										className='ml-auto px-2 py-1 absolute right-2 top-2 rounded-full bg-gray-onyx hover:text-white'
+										type='button'
+										onClick={async () => {
+											if (following) {
+												const res: Response = await user.unfollow(null, currentUser!.username);
+												if (res.ok) setFollowing(false);
+											} else {
+												const res: Response = await user.follow(null, currentUser!.username);
+												if (res.ok) setFollowing(true);
+											}
+										}}
+									>
+										{following ? 'Unfollow' : 'Follow'}
+									</button>
+									:
+									<></>
+								}
+								<h2
+									className='mt-6 text-xl font-semibold overflow-hidden text-nowrap text-ellipsis'
+								>
+									{currentUser!.nickname}
+								</h2>
 								<p>{`@${currentUser!.username}`}</p>
 								<p>{currentUser!.profile_text}</p>
 								<p>{`Joined ${formatDate(currentUser!.join_date as string)}`}</p>
 								<div className="flex gap-2">
 									<Link
+										className='px-4 py-1 rounded-full bg-gray-outer-space hover:text-white'
 										to={'/main/connections/following'}
 										state={{
 											username: currentUser!.username,
 											nickname: currentUser!.nickname
 										}}
-										className='p-1 border-2 border-black'
 									>
 										{`${currentUser!.following.length} Following`}
 									</Link>
 									<Link
+										className='px-4 py-1 rounded-full bg-gray-outer-space hover:text-white'
 										to={'/main/connections/followers'}
 										state={{
 											username: currentUser!.username,
 											nickname: currentUser!.nickname
 										}}
-										className='p-1 border-2 border-black'
 									>
 										{`${currentUser!.followers.length} Followers`}
 									</Link>
 								</div>
 							</div>
-							<div className="flex">
+							<div className="my-4 flex gap-4">
 								<Link
-									className='flex-1 m-2 p-4 border-2 border-black text-center'
+									className='flex-1 px-8 py-1 flex justify-center items-center rounded-full text-xl font-semibold text-center bg-gray-onyx hover:text-white'
 									to={'/main/profile/'}
 									state={{ username: currentUser!.username }}
 								>
-									Posts
+									POSTS
 								</Link>
 								<Link
-									className='flex-1 m-2 p-4 border-2 border-black text-center'
+									className='flex-1 px-8 py-1 flex justify-center items-center rounded-full text-xl font-semibold text-center bg-gray-onyx hover:text-white'
 									to={'/main/profile/replies'}
 									state={{ username: currentUser!.username }}
 								>
-									Replies
+									REPLIES
 								</Link>
 							</div>
 						</div>

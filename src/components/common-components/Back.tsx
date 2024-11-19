@@ -5,7 +5,7 @@ function Back() {
 	return (
 		<div>
 			<button
-				className='mr-auto'
+				className='mr-auto hover:text-white'
 				type='button'
 				onClick={() => {
 					navigate(-1);

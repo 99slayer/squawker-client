@@ -6,10 +6,10 @@ function UserConnectionsPage() {
 
 	return (
 		<div className='flex-1 relative'>
-			<header className="p-2 flex flex-col gap-4 sticky top-0 z-10 border-2 border-black bg-white">
+			<header className="px-2 py-4 flex flex-col gap-4 sticky top-0 z-10 bg-black-night">
 				<div className='flex gap-4'>
 					<button
-						className=''
+						className='hover:text-white'
 						type='button'
 						onClick={() => {
 							navigate(-1);
@@ -26,7 +26,7 @@ function UserConnectionsPage() {
 				</div>
 				<div className='flex gap-4'>
 					<Link
-						className='p-2 border-[2px] border-black'
+						className='px-4 py-1 rounded-full hover:text-white bg-gray-onyx'
 						to={'/main/connections/followers'}
 						state={{
 							username: state.username,
@@ -37,7 +37,7 @@ function UserConnectionsPage() {
 					</Link>
 
 					<Link
-						className='p-2 border-[2px] border-black'
+						className='px-4 py-1 rounded-full hover:text-white bg-gray-onyx'
 						to={'/main/connections/following'}
 						state={{
 							username: state.username,

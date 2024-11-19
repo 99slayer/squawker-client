@@ -33,7 +33,7 @@ function CommentPage() {
 					<Component.ReplyUI id={commentGroup!.post_data.post_id} />
 					{repliesError ?
 						<Component.Err refetch={repliesRefetch} /> :
-						<div className='flex flex-col'>
+						<div className='mt-2 flex flex-col'>
 							<ul className='flex flex-col'>
 								{createPostList(comments, 'Post')}
 							</ul>
@@ -45,7 +45,7 @@ function CommentPage() {
 										<div>
 											{commentCount !== comments.length ?
 												<button
-													className='p-2 border-[2px] border-black'
+													className='px-5 py-1 rounded-full hover:text-white hover:bg-gray-onyx font-semibold'
 													onClick={() => setCommentCount(comments.length)}
 												>
 													GET MORE

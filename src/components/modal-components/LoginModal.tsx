@@ -1,10 +1,11 @@
 import React, {
 	forwardRef,
 	useImperativeHandle,
-	useRef
+	useRef,
+	useState
 } from 'react';
 import { FormEvent } from '../../types';
-import { createValidationErrors as cve } from '../componentUtil';
+import Component from '../Component';
 import hook from '../../hooks/hooks';
 
 type Props = {
@@ -20,21 +21,25 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 			validationErrors,
 			setValidationErrors
 		} = hook.useLogin();
+		const [passVis, setPassVis] = useState<boolean>(false);
 
 		return (
 			<dialog
+				className='mt-[140px] rounded-lg text-white/50 bg-gray-onyx'
 				ref={ref}
-				className='translate-y-[-220px] bg-transparent'
-				onClose={() => setValidationErrors(null)}
+				onClose={() => {
+					setValidationErrors(null);
+					setPassVis(false);
+				}}
 			>
 				<div
-					className='p-4 flex flex-col items-stretch gap-4 border-2 border-black bg-gray-300'
+					className='p-4 flex flex-col items-stretch gap-2'
 				>
 					<div className='flex'>
-						<h1 className='text-3xl font-bold text-white'>LOGIN</h1>
+						<h1 className='text-2xl font-bold'>LOGIN</h1>
 						<button
+							className='self-start size-5 ml-auto flex justify-center items-center rounded-sm font-semibold hover:text-white hover:bg-red-500'
 							onClick={() => toggle(ref)}
-							className='ml-auto'
 						>
 							X
 						</button>
@@ -44,8 +49,9 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 						onSubmit={
 							async (e: FormEvent) => handleLogin(e)
 						}
+						autoComplete='off'
 					>
-						<div>
+						<div className='flex flex-col gap-2'>
 							<div
 								className='flex items-center'
 							>
@@ -56,20 +62,15 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 									Username
 								</label>
 								<input
+									className='p-1 rounded-md bg-gray-outer-space'
 									type='text'
 									placeholder='Username'
 									name='username'
-									className='p-1'
 								/>
 							</div>
-							{validationErrors?.usernameErrors ?
-								<ul>
-									{cve(validationErrors.usernameErrors)}
-								</ul>
-								: <></>
-							}
+							<Component.ValidationErrors errors={validationErrors?.usernameErrors} />
 						</div>
-						<div>
+						<div className='flex flex-col gap-2'>
 							<div
 								className='flex items-center'
 							>
@@ -80,20 +81,30 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 									Password
 								</label>
 								<input
-									type='password'
+									className='p-1 rounded-md bg-gray-outer-space'
+									type={passVis ? 'text' : 'password'}
 									placeholder='Password'
 									name='password'
-									className='p-1'
 								/>
+								<button
+									className='ml-2 p-[2px] flex rounded-md bg-gray-outer-space'
+									type='button'
+									onClick={() => setPassVis(!passVis)}
+								>
+									<span
+										className={`text-[26px] material-symbols-outlined hover:text-white ${passVis ? 'filled text-white' : ''}`}
+									>
+										visibility
+									</span>
+								</button>
 							</div>
-							{validationErrors?.passwordErrors ?
-								<ul>
-									{cve(validationErrors.passwordErrors)}
-								</ul>
-								: <></>
-							}
+							<Component.ValidationErrors errors={validationErrors?.passwordErrors} />
 						</div>
-						<button className='px-4 self-end rounded-full bg-gray-200'>login</button>
+						<button
+							className='px-4 self-end rounded-full font-semibold hover:text-white bg-gray-outer-space'
+						>
+							LOGIN
+						</button>
 					</form>
 				</div>
 			</dialog>

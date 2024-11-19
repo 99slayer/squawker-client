@@ -13,7 +13,7 @@ import { formatDate } from '../../util';
 import { upload } from '../../supabase';
 import { AppContext } from '../../App';
 import hook from '../../hooks/hooks';
-import { createValidationErrors as cve } from '../componentUtil';
+import Component from '../Component';
 
 type Props = {
 	toggle: (ref: React.RefObject<HTMLDialogElement>) => void;
@@ -48,8 +48,8 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 
 		return (
 			<dialog
+				className='w-[500px] max-w-[500px] max-h-[75%] mx-auto mt-[140px] p-2 border-[3px] border-gray-outer-space rounded-lg text-white/50 bg-black-eerie-black'
 				ref={ref}
-				className='w-[500px] max-w-[500px] p-2 translate-y-[-80px] border-2 border-black bg-gray-300'
 				onClose={() => {
 					setPostId(null);
 					setImage(null);
@@ -57,10 +57,10 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 					setValidationErrors(null);
 				}}
 			>
-				<div className='flex flex-col gap-4'>
+				<div className='flex flex-col gap-2'>
 					<button
+						className='self-end size-5 flex justify-center items-center rounded-sm font-semibold hover:text-white hover:bg-red-500'
 						onClick={() => toggle(ref)}
-						className='size-5 flex justify-center items-center self-end bg-white'
 					>
 						X
 					</button>
@@ -78,41 +78,34 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 								<div
 									className='rounded-full'
 								>
-									<img className='w-[44px] h-[44px] rounded-full object-cover' src={appPfp} />
+									<img className='p-1 size-[44px] rounded-full object-cover' src={appPfp} />
 								</div>
 								:
 								<span className="text-[44px] material-symbols-outlined filled rounded-full">
 									account_circle
 								</span>
 							}
-							<div className='flex-1 flex flex-col'>
+							<div className='flex-1 flex flex-col gap-2'>
 								<textarea
-									className='w-[100%] min-h-24 p-2 resize-none rounded-xl'
+									className='w-[100%] min-h-24 p-2 resize-none rounded-lg bg-gray-outer-space'
 									ref={textRef}
 									name='text'
-									placeholder='whats up?'
+									placeholder='What&apos;s up?'
 								/>
-								{validationErrors?.textErrors ?
-									<ul>
-										{cve(validationErrors.textErrors)}
-									</ul>
-									: <></>
-								}
-								{validationErrors?.imageErrors ?
-									<ul>
-										{cve(validationErrors.imageErrors)}
-									</ul>
-									: <></>
-								}
+								<Component.ValidationErrors errors={validationErrors?.textErrors} />
+								<Component.ValidationErrors errors={validationErrors?.imageErrors} />
 							</div>
 						</div>
 						{image ?
 							<div
 								className='relative'
 							>
-								<img src={image} />
+								<img
+									className='rounded-lg'
+									src={image}
+								/>
 								<button
-									className='w-8 h-8 absolute border-[2px] border-black rounded-full top-2 right-2 text-stone-100 bg-red-500 hover:border-white'
+									className='size-5 flex justify-center items-center absolute top-2 right-2 rounded-full font-semibold hover:text-white bg-red-500'
 									type='button'
 									onClick={() => {
 										setImage(null);
@@ -126,38 +119,50 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 						}
 						{quotedPost ?
 							<div
-								className='p-2 flex items-start gap-2 border-[2px] border-black bg-white'
+								className='p-2 flex items-start gap-2 rounded-lg bg-gray-outer-space'
 							>
-								<div
-									className='w-6 h-6 rounded-full'
-								>
-									{quotedPost.post.user.pfp ?
-										<img src={quotedPost.post.user.pfp} />
-										:
-										<span className="material-symbols-outlined">
-											account_circle
-										</span>
-									}
-								</div>
+
+								{quotedPost.post.user.pfp ?
+									<img
+										className='p-1 size-[44px] rounded-full object-cover'
+										src={quotedPost.post.user.pfp}
+									/>
+									:
+									<span className="text-[44px] material-symbols-outlined filled">
+										account_circle
+									</span>
+								}
+
 								<div
 									className='flex flex-col gap-2'
 								>
 									<div
-										className='flex gap-2'
+										className='flex gap-2  gap-y-0 flex-wrap'
 									>
-										<h3 className='font-bold'>{quotedPost.post.user.nickname}</h3>
-										<p>{`@${quotedPost.post.user.username}`}</p>
-										<p>{`${formatDate(quotedPost.post_data.timestamp)}`}</p>
+										<h3
+											className='max-w-[40%] font-semibold overflow-hidden text-nowrap text-ellipsis'
+										>
+											{quotedPost.post.user.nickname}
+										</h3>
+										<p
+											className='max-w-[40%] text-sm overflow-hidden text-nowrap text-ellipsis'
+										>
+											{`@${quotedPost.post.user.username}`}
+										</p>
+										<p
+											className='text-xs'
+										>
+											{`${formatDate(quotedPost.post_data.timestamp)}`}
+										</p>
 									</div>
 									<div
-										className='flex gap-2'
+										className='flex items-start gap-2'
 									>
 										{quotedPost.post.post_image ?
-											<div
-												className='w-32 h-32 flex items-center justify-center'
-											>
-												<img src={quotedPost.post.post_image} />
-											</div>
+											<img
+												className='size-[100px] rounded-lg object-cover'
+												src={quotedPost.post.post_image}
+											/>
 											: <></>
 										}
 										<p>{quotedPost.post.text}</p>
@@ -174,7 +179,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 						/>
 						<div className='flex gap-2'>
 							<button
-								className='flex items-center justify-center rounded-full bg-white'
+								className="p-1 flex items-center justify-center rounded-md hover:text-white bg-gray-onyx hover:bg-gray-outer-space"
 								type='button'
 								onClick={(e) => {
 									e.preventDefault();
@@ -218,12 +223,12 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 									input.click();
 								}}
 							>
-								<span className="p-1 material-symbols-outlined">
+								<span className="material-symbols-outlined">
 									image
 								</span>
 							</button>
 							<button
-								className='ml-auto p-1 bg-white'
+								className="ml-auto px-4 py-1 self-center rounded-full hover:text-white hover:bg-gray-outer-space font-semibold"
 								type='button'
 								disabled={disabled}
 								onClick={async () => {

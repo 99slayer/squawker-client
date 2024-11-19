@@ -2,14 +2,14 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
 import { formatDate } from '../../util';
 import { comment, like, post } from '../../api/api';
-import { MainContext } from './page-main/MainTemplate';
+import { MainContext } from '../page-components/page-main/MainTemplate';
 import {
 	MainContextInterface,
 	PostInterface,
 	ReturnDataInterface
 } from '../../types';
 import { clearUpload } from '../../supabase';
-import { createValidationErrors as cve } from '../componentUtil';
+import Component from '../Component';
 
 function Post({ data }: { data: PostInterface | null }) {
 	const location = useLocation();
@@ -33,10 +33,14 @@ function Post({ data }: { data: PostInterface | null }) {
 		};
 	}, [data]);
 
+	useEffect(() => {
+		setValidationErrors(null);
+	}, [openEdit]);
+
 	if ((data && !data.post_data) || deleted) {
 		return (
 			<div
-				className="mt-2 mb-2 p-2 flex flex-col gap-2 border-[2px] border-black cursor-pointer bg-white"
+				className="my-2 p-2 rounded-lg bg-black-eerie-black"
 			>
 				Post was removed by user.
 			</div>
@@ -46,7 +50,7 @@ function Post({ data }: { data: PostInterface | null }) {
 	return (
 		(data ?
 			<article
-				className="mt-2 mb-2 p-2 flex flex-col gap-2 border-[2px] border-black cursor-pointer bg-white"
+				className="my-2 p-2 flex flex-col gap-2 rounded-lg bg-black-eerie-black cursor-pointer break-all"
 				onClick={() => {
 					if (location.pathname === `/main/status/post/${data._id}`) return;
 					if (data.post_type === 'Post') {
@@ -69,13 +73,16 @@ function Post({ data }: { data: PostInterface | null }) {
 					<></>
 				}
 				<div className="flex items-start gap-2">
-					<div
-						className='w-6 h-6 rounded-full'
-					>
+					<div className='min-w-[40px]'>
 						{data.post.user.pfp ?
-							<img src={data.post.user.pfp} />
+							<img
+								className='p-[2px] size-[40px] rounded-full object-cover'
+								src={data.post.user.pfp}
+							/>
 							:
-							<span className="material-symbols-outlined">
+							<span
+								className="material-symbols-outlined filled text-[40px] rounded-full"
+							>
 								account_circle
 							</span>
 						}
@@ -83,7 +90,7 @@ function Post({ data }: { data: PostInterface | null }) {
 					<div className="flex-1 flex flex-col">
 						<div className="flex items-center">
 							<div
-								className='flex gap-2'
+								className='flex items-center gap-2 gap-y-0 flex-wrap'
 								onClick={(e) => {
 									e.stopPropagation();
 									navigate('/main/profile', {
@@ -97,9 +104,17 @@ function Post({ data }: { data: PostInterface | null }) {
 									});
 								}}
 							>
-								<h3 className='font-bold'>{data.post.user.nickname}</h3>
-								<p>{`@${data.post.user.username}`}</p>
-								<p>{`${formatDate(data.post_data.timestamp)}`}</p>
+								<h3
+									className='max-w-[40%] font-semibold overflow-hidden text-nowrap text-ellipsis'
+								>
+									{data.post.user.nickname}
+								</h3>
+								<p
+									className='max-w-[40%] text-sm overflow-hidden text-nowrap text-ellipsis'
+								>
+									{`@${data.post.user.username}`}
+								</p>
+								<p className='text-xs'>{`${formatDate(data.post_data.timestamp)}`}</p>
 							</div>
 							{data.post_data.user.username === localStorage.getItem('username') ?
 								<OptionsDropdown
@@ -120,7 +135,7 @@ function Post({ data }: { data: PostInterface | null }) {
 						}
 						{openEdit && !data.post_data.repost ?
 							<form
-								className='flex flex-col gap-2 relative'
+								className='mt-2 flex flex-col relative'
 								onSubmit={async (e) => {
 									setValidationErrors(null);
 
@@ -153,28 +168,23 @@ function Post({ data }: { data: PostInterface | null }) {
 							>
 								<div>
 									<textarea
-										className='w-[100%] p-2 pr-[44px] border-[2px] border-black'
+										className='w-[100%] min-h-24 p-2 pr-[44px] resize-none rounded-lg bg-gray-outer-space'
 										ref={textRef}
 										name='text'
 										defaultValue={editText ?? data.post.text}
 										autoFocus
 										onClick={(e) => e.stopPropagation()}
 									/>
-									{validationErrors?.textErrors ?
-										<ul>
-											{cve(validationErrors.textErrors)}
-										</ul>
-										: <></>
-									}
+									<Component.ValidationErrors errors={validationErrors?.textErrors} />
 								</div>
 								<button
-									className='ml-auto px-2 border-[2px] border-black'
+									className='mt-1 ml-auto px-4 py-1 rounded-full font-semibold hover:text-white hover:bg-gray-onyx'
 									onClick={(e) => e.stopPropagation()}
 								>
-									save edit
+									SAVE
 								</button>
 								<button
-									className='w-6 h-6 flex justify-center items-center absolute right-6 top-2 border-[2px] border-black'
+									className='size-6 flex justify-center items-center absolute right-2 top-2 rounded-sm font-semibold hover:text-white hover:bg-red-500'
 									onClick={(e) => {
 										e.stopPropagation();
 										setOpenEdit(false);
@@ -184,9 +194,7 @@ function Post({ data }: { data: PostInterface | null }) {
 							:
 							<div>
 								{data.post.text ?
-									<p
-										className='mt-2 mb-2'
-									>
+									<p className='mt-2 mb-2'>
 										{editText ?? data.post.text}
 									</p>
 									:
@@ -194,14 +202,15 @@ function Post({ data }: { data: PostInterface | null }) {
 							</div>
 						}
 						{data.post.post_image ?
-							<div>
-								<img src={data.post.post_image} />
-							</div>
+							<img
+								className='mr-[44px] mb-2 rounded-lg'
+								src={data.post.post_image}
+							/>
 							: <></>
 						}
 						{data.quoted_post && !data.quoted_post.post_data ?
 							<div
-								className='flex justify-center p-2 border-[2px] border-black cursor-default'
+								className="my-2 p-2 rounded-lg bg-gray-onyx"
 								onClick={(e) => e.stopPropagation()}
 							>
 								Post was removed by user.
@@ -211,7 +220,7 @@ function Post({ data }: { data: PostInterface | null }) {
 						}
 						{data.quoted_post && data.quoted_post.post_data ?
 							<article
-								className='flex flex-col gap-2 p-2 border-[2px] border-black'
+								className='max-w-[100%] mb-2 p-2 flex gap-2 rounded-lg bg-gray-onyx'
 								onClick={(e) => {
 									e.stopPropagation();
 									if (!data.quoted_post!._id) return;
@@ -239,42 +248,61 @@ function Post({ data }: { data: PostInterface | null }) {
 
 								}}
 							>
-								<div className='flex items-start gap-2'>
-
-									<div
-										className='w-6 h-6 rounded-full'
-									>
-										{data.quoted_post.post.user.pfp ?
-											<img src={data.quoted_post.post.user.pfp} />
-											:
-											<span className="material-symbols-outlined">
-												account_circle
-											</span>
+								<div className='min-w-[40px] rounded-full'>
+									{data.quoted_post.post.user.pfp ?
+										<img
+											className='p-[2px] size-[40px] rounded-full object-cover'
+											src={data.quoted_post.post.user.pfp}
+										/>
+										:
+										<span
+											className="material-symbols-outlined filled text-[40px] rounded-full"
+										>
+											account_circle
+										</span>
+									}
+								</div>
+								<div className='flex flex-col gap-2'>
+									<div className='flex items-center gap-2 gap-y-0 flex-wrap'>
+										<h3
+											className='max-w-[30%] font-semibold overflow-hidden text-nowrap text-ellipsis'
+										>
+											{data.quoted_post.post.user.nickname}
+										</h3>
+										<p
+											className='max-w-[30%] text-sm overflow-hidden text-nowrap text-ellipsis'
+										>
+											{`@${data.quoted_post.post.user.username}`}
+										</p>
+										<p
+											className='text-xs'
+										>
+											{`${formatDate(data.quoted_post.post_data.timestamp)}`}
+										</p>
+									</div>
+									<div className='flex gap-4 justify-center items-start'>
+										{data.quoted_post.post.post_image ?
+											<div>
+												<img
+													className='flex-1 rounded-lg'
+													src={data.quoted_post.post.post_image}
+												/>
+											</div>
+											: <></>
+										}
+										{data.quoted_post.post.text ?
+											<p className='flex-2 min-w-[50%]'>{data.quoted_post.post.text}</p>
+											: <></>
 										}
 									</div>
-
-									<h3 className='font-bold'>{data.quoted_post.post.user.nickname}</h3>
-									<p>{`@${data.quoted_post.post.user.username}`}</p>
-									<p>{`${formatDate(data.quoted_post.post_data.timestamp)}`}</p>
-								</div>
-								<div className='flex gap-2'>
-									{data.quoted_post.post.post_image ?
-										<div
-											className='w-32 h-32 flex items-center justify-center'
-										>
-											<img src={data.quoted_post.post.post_image} />
-										</div>
-										: <></>
-									}
-									<p>{data.quoted_post.post.text}</p>
 								</div>
 							</article>
 							:
 							<></>
 						}
-						<div className='flex gap-2 relative'>
+						<div className='flex relative'>
 							<div
-								className='p-[2px] flex items-center border-[1px] border-black'
+								className='px-2 py-1 flex items-center gap-1 rounded-xl hover:bg-gray-onyx'
 							>
 								<span className="material-symbols-outlined">
 									mode_comment
@@ -287,7 +315,7 @@ function Post({ data }: { data: PostInterface | null }) {
 								type={data.post_type}
 							/>
 							<div
-								className='p-[2px] flex items-center border-[1px] border-black hover:bg-slate-300'
+								className='px-2 py-1 flex items-center gap-1 rounded-xl hover:bg-gray-onyx'
 								onClick={async (e) => {
 									e.stopPropagation();
 									if (liked) {
@@ -345,7 +373,7 @@ function OptionsDropdown(
 	return (
 		(data ?
 			<div
-				className="ml-auto flex justify-center relative border-[2px] border-black"
+				className='self-start ml-auto px-1 flex justify-center relative rounded-lg z-10 break-normal hover:bg-gray-onyx'
 				onClick={(e) => {
 					e.stopPropagation();
 					setOpen(!open);
@@ -356,14 +384,14 @@ function OptionsDropdown(
 				</span>
 				{open ?
 					<div
-						className='flex flex-col absolute top-7 border-[2px] border-black bg-white'
+						className='p-2 flex flex-col gap-2 absolute top-7 rounded-xl bg-black-night'
 						onMouseLeave={() => {
 							setOpen(false);
 						}}
 					>
 						{!data?.post_data.repost && data.post.text ?
 							<button
-								className='px-4 hover:bg-slate-300'
+								className='px-4 rounded-full hover:text-white bg-gray-onyx hover:bg-gray-outer-space'
 								onClick={() => {
 									setOpenEdit(true);
 								}}
@@ -371,7 +399,7 @@ function OptionsDropdown(
 							: <></>
 						}
 						<button
-							className='px-4 hover:bg-slate-300'
+							className='px-4 rounded-full hover:text-white bg-gray-onyx hover:bg-gray-outer-space'
 							onClick={async (e) => {
 								e.stopPropagation();
 								if (type === 'Post') {
@@ -416,7 +444,7 @@ function RepostDropdown({
 	return (
 		<div>
 			<div
-				className='p-[2px] flex items-center relative border-[1px] border-black'
+				className='px-2 py-1 flex items-center gap-1 relative rounded-xl hover:bg-gray-onyx'
 				onClick={(e) => {
 					e.stopPropagation();
 					setOpen(!open);
@@ -429,13 +457,13 @@ function RepostDropdown({
 			</div>
 			{open ?
 				<div
-					className='flex flex-col absolute top-8 bg-white border-[2px] border-black'
+					className='p-2 flex flex-col gap-2 absolute top-8 rounded-xl bg-black-night'
 					onMouseLeave={() => {
 						setOpen(false);
 					}}
 				>
 					<button
-						className='px-4 hover:bg-gray-300'
+						className='px-4 rounded-full hover:text-white bg-gray-onyx hover:bg-gray-outer-space'
 						type='button'
 						onClick={async (e) => {
 							e.stopPropagation();
@@ -471,10 +499,10 @@ function RepostDropdown({
 							}
 						}}
 					>
-						repost
+						Repost
 					</button>
 					<button
-						className='px-4 hover:bg-gray-300'
+						className='px-4 rounded-full hover:text-white bg-gray-onyx hover:bg-gray-outer-space'
 						type='button'
 						onClick={(e) => {
 							e.stopPropagation();
@@ -482,7 +510,7 @@ function RepostDropdown({
 							toggle(postRef);
 						}}
 					>
-						quote
+						Quote
 					</button>
 				</div>
 				: <></>

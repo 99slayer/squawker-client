@@ -16,7 +16,7 @@ function UserCard({ data }: { data: ConnectCardData }) {
 
 	return (
 		<article
-			className="p-2 flex gap-2 border-2 border-black cursor-pointer"
+			className="p-2 flex items-center gap-2 rounded-lg bg-gray-onyx cursor-pointer"
 			onClick={(e) => {
 				e.stopPropagation();
 				navigate('/main/profile', {
@@ -26,26 +26,37 @@ function UserCard({ data }: { data: ConnectCardData }) {
 				});
 			}}
 		>
-			<div>
+			<div className='flex rounded-full'>
 				{data.pfp ?
 					<img
-						className='w-[40px] h-[40px] rounded-full'
-						src={data.pfp} />
+						className='size-[50px] p-1 rounded-full object-cover'
+						src={data.pfp}
+					/>
 					:
-					<span className="material-symbols-outlined text-[40px] rounded-full bg-white">
+					<span
+						className='material-symbols-outlined filled text-[50px] rounded-full'
+					>
 						account_circle
 					</span>
 				}
 			</div>
 			<div className="flex-1 flex flex-col items-stretch gap-2">
 				<div className="flex items-center">
-					<div>
-						<h3>{data.nickname}</h3>
-						<p>{`@${data.username}`}</p>
+					<div className='max-[470px]:w-[140px]'>
+						<h3
+							className='overflow-hidden text-nowrap text-ellipsis'
+						>
+							{data.nickname}
+						</h3>
+						<p
+							className='overflow-hidden text-nowrap text-ellipsis'
+						>
+							{`@${data.username}`}
+						</p>
 					</div>
 					{data.username !== appUsername ?
 						<button
-							className="ml-auto p-1 border-2 border-black"
+							className="w-[100px] ml-auto rounded-full hover:text-white bg-black-eerie-black"
 							type='button'
 							onClick={async (e) => {
 								e.stopPropagation();

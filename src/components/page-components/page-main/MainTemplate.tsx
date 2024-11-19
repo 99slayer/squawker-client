@@ -36,15 +36,16 @@ function MainTemplate() {
 		<MainContext.Provider value={contextValues}>
 			<div
 				id='main-page'
-				className='flex-1 min-h-[1500px] px-2 flex justify-between items-start gap-4 relative'
+				className='min-w-[400px] flex-1 px-2 flex justify-center items-start gap-4 relative'
 			>
-				<div className='w-64 min-w-32 ml-auto sticky top-0'>
+				<div className='sticky top-0'>
 					<Component.Sidebar />
 				</div>
-				<div className='self-stretch w-[600px] min-w-[600px] pt-[40px] pb-[50px] flex flex-col'>
+				<div
+					className='self-stretch w-[600px] max-[1020px]:max-w-[600px] mr-[200px] max-[1020px]:mr-auto pt-[40px] pb-[50px] flex flex-col'
+				>
 					<Outlet />
 				</div>
-				<div className='min-w-64 mr-auto'></div>
 				<Component.PostModal
 					ref={postRef}
 					toggle={toggle}

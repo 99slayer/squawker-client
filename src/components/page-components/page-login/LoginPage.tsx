@@ -28,23 +28,22 @@ function LoginPage() {
 
 	return (
 		<div className='flex justify-center'>
-			<div className='mt-[260px] p-4 flex flex-col gap-4 border-2 border-black'>
-				<h1>LOGIN PAGE</h1>
-				<div className='flex flex-col gap-4'>
+			<div className='mt-[220px] p-6 flex flex-col rounded-lg bg-gray-onyx'>
+				<div className='flex flex-col justify-evenly gap-4'>
 					<button
+						className='px-3 rounded-full hover:text-white bg-gray-outer-space'
 						onClick={() => { toggle(loginRef); }}
-						className='border-2 border-black'
 					>
 						LOGIN
 					</button>
 					<button
+						className='px-3 rounded-full hover:text-white bg-gray-outer-space'
 						onClick={() => { toggle(signupRef); }}
-						className='border-2 border-black'
 					>
 						SIGNUP
 					</button>
 					<button
-						className='px-2 border-2 border-black'
+						className='px-3 rounded-full hover:text-white bg-gray-outer-space'
 						onClick={async (e) => {
 							const res: Response = await user.createGuestUser(e);
 							const data: ReturnDataInterface = await res.json();

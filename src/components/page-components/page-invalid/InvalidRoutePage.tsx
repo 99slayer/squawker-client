@@ -3,12 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 function InvalidRoutePage() {
 	const navigate = useNavigate();
 	const location = useLocation();
+
 	return (
 		<div
-			className="p-2 flex flex-col"
+			className="p-2 pl-4 flex flex-col"
 		>
 			<button
-				className='mr-auto'
+				className='mt-[30px] mr-auto'
 				type='button'
 				onClick={() => {
 					navigate('/');

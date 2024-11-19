@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { upload } from '../../../supabase';
 import hook from '../../../hooks/hooks';
-import { createValidationErrors as cve } from '../../componentUtil';
+import Component from '../../Component';
 
 function ReplyUI({ id }: { id: string | null }) {
 	const [image, setImage] = useState<string | null>(null);
@@ -32,9 +32,11 @@ function ReplyUI({ id }: { id: string | null }) {
 
 	return (
 		(id ?
-			<div>
+			<div
+				className='mt-2 p-2 rounded-lg bg-black-eerie-black'
+			>
 				<form
-					className='my-2 flex flex-col items-stretch gap-2'
+					className='flex flex-col items-stretch gap-2'
 					onSubmit={async (e) => {
 						e.preventDefault();
 						const success: boolean = await handleCreatePost(e, id, 'Comment');
@@ -42,33 +44,26 @@ function ReplyUI({ id }: { id: string | null }) {
 						setDisabled(false);
 					}}
 				>
-					<div>
+					<div className='flex flex-col gap-2'>
 						<textarea
-							className='w-[100%] min-h-24 p-2 resize-none rounded-xl border-[2px] border-black'
+							className='w-[100%] min-h-24 p-2 resize-none rounded-lg bg-gray-outer-space'
 							ref={textRef}
 							name='text'
-							placeholder='whats up?'
+							placeholder='What&apos;s up?'
 						/>
-						{validationErrors?.textErrors ?
-							<ul>
-								{cve(validationErrors.textErrors)}
-							</ul>
-							: <></>
-						}
-						{validationErrors?.imageErrors ?
-							<ul>
-								{cve(validationErrors.imageErrors)}
-							</ul>
-							: <></>
-						}
+						<Component.ValidationErrors errors={validationErrors?.textErrors} />
+						<Component.ValidationErrors errors={validationErrors?.imageErrors} />
 					</div>
 					{image ?
 						<div
-							className='relative'
+							className='self-center relative'
 						>
-							<img src={image} />
+							<img
+								className='mt-1 mb-2 rounded-lg'
+								src={image}
+							/>
 							<button
-								className='w-8 h-8 absolute border-[2px] border-black rounded-full top-2 right-2 text-stone-100 bg-red-500 hover:border-white'
+								className='size-5 flex justify-center items-center absolute top-3 right-2 rounded-full font-semibold hover:text-white bg-red-500'
 								type='button'
 								onClick={() => {
 									setImage(null);
@@ -90,7 +85,7 @@ function ReplyUI({ id }: { id: string | null }) {
 						className='flex'
 					>
 						<button
-							className="p-1 flex items-center justify-center border-[2px] border-black rounded-full"
+							className="p-1 flex items-center justify-center rounded-md bg-gray-onyx hover:text-white"
 							type='button'
 							onClick={(e) => {
 								e.preventDefault();
@@ -135,12 +130,12 @@ function ReplyUI({ id }: { id: string | null }) {
 								input.click();
 							}}
 						>
-							<span className="p-1 material-symbols-outlined">
+							<span className="material-symbols-outlined">
 								image
 							</span>
 						</button>
 						<button
-							className="ml-auto p-1 border-[2px] border-black"
+							className="ml-auto px-4 py-1 self-center rounded-full hover:text-white hover:bg-gray-onyx font-semibold"
 							type='button'
 							disabled={disabled}
 							onClick={async () => {
@@ -156,7 +151,7 @@ function ReplyUI({ id }: { id: string | null }) {
 								fileRef.current?.form?.requestSubmit();
 							}}
 						>
-							Reply
+							REPLY
 						</button>
 					</div>
 				</form>

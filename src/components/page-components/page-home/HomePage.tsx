@@ -22,7 +22,7 @@ function HomePage() {
 			</ul>
 			{loading ?
 				<Component.Spinner /> :
-				<div>
+				<div className='self-center'>
 					{posts.length === 0 ?
 						<Component.Empty
 							text={`
@@ -30,10 +30,10 @@ function HomePage() {
 								Check out the connect page to find other users.
 								`}
 						/> :
-						<div className='self-center'>
+						<div>
 							{postCount !== posts.length ?
 								<button
-									className='p-2 border-[2px] border-black'
+									className='px-5 py-1 rounded-full hover:text-white hover:bg-gray-onyx font-semibold'
 									onClick={() => setPostCount(posts.length)}
 								>
 									GET MORE

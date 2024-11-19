@@ -5,7 +5,7 @@ function CommentDisplayGroup({ commentGroup }: { commentGroup: PostInterface }) 
 	return (
 		(commentGroup ?
 			<div
-				className='px-2 flex flex-col border-[2px] border-black'
+				className='my-2 px-3 py-1 flex flex-col rounded-lg bg-gray-onyx'
 			>
 				{commentGroup.root_post ?
 					<Component.Post data={commentGroup.root_post} />

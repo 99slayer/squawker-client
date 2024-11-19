@@ -22,84 +22,102 @@ function Sidebar() {
 
 	return (
 		<div
-			className='flex flex-col'
+			className='flex flex-col items-start max-[1020px]:items-end gap-2'
 		>
-			<ul className="flex flex-col items-stretch gap-2">
-				<li
-					className='size-10 flex justify-center items-center rounded-full text-white text-xs bg-black'
-					key={uuid()}
-				>
-					ICON
-				</li>
-				<li className="flex">
+			<ul className="mt-[56px] flex flex-col items-start gap-2 text-xl font-semibold">
+				<li className="flex items-center">
 					<Link
+						className='px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full hover:text-white hover:bg-gray-onyx'
 						to={'/main'}
-						className="flex-1 p-4 border-[2px] border-black text-xl text-center"
 						key={uuid()}
+						title='home'
 					>
-						HOME
+						<span className="material-symbols-outlined filled">
+							home
+						</span>
+						<p className='max-[1020px]:hidden'>HOME</p>
 					</Link>
 				</li>
 				<li className="flex">
 					<Link
+						className='px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full hover:text-white hover:bg-gray-onyx'
+						key={uuid()}
 						to={'/main/profile'}
 						state={{ username: appUsername }}
-						className="flex-1 p-4 border-[2px] border-black text-xl text-center"
-						key={uuid()}
+						title='profile'
 					>
-						PROFILE
+						<span className="material-symbols-outlined">
+							person
+						</span>
+						<p className='max-[1020px]:hidden'>PROFILE</p>
 					</Link>
 				</li>
 				<li className="flex">
 					<Link
+						className='px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full hover:text-white hover:bg-gray-onyx'
+						key={uuid()}
 						to={'/main/connect'}
 						state={{ username: appUsername }}
-						className="flex-1 p-4 border-[2px] border-black text-xl text-center"
-						key={uuid()}
+						title='connect'
 					>
-						CONNECT
+						<span className="material-symbols-outlined">
+							person_add
+						</span>
+						<p className='max-[1020px]:hidden'>CONNECT</p>
 					</Link>
 				</li>
 				<li className="flex">
 					<Link
+						className='px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full hover:text-white hover:bg-gray-onyx'
+						key={uuid()}
 						to={'/main/settings'}
 						state={{ username: appUsername }}
-						className="flex-1 p-4 border-[2px] border-black text-xl text-center"
-						key={uuid()}
+						title='settings'
 					>
-						SETTINGS
+						<span className="material-symbols-outlined filled">
+							settings
+						</span>
+						<p className='max-[1020px]:hidden'>SETTINGS</p>
 					</Link>
 				</li>
 			</ul>
 			<button
+				className='flex-1 px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full text-xl font-semibold hover:text-white hover:bg-gray-onyx'
+				title='post'
 				onClick={() => { toggle(postRef); }}
-				className="flex-1 mt-2 p-4 border-[2px] border-black text-xl text-center"
 			>
-				POST
+				<span className="material-symbols-outlined">
+					edit_square
+				</span>
+				<p className='max-[1020px]:hidden'>POST</p>
 			</button >
 			<button
+				className='flex-1 px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full text-xl font-semibold hover:text-white hover:bg-gray-onyx'
+				title='logout'
 				onClick={(e) => { appLogout(e); }}
-				className="flex-1 mt-2 p-4 border-[2px] border-black text-xl text-center"
 			>
-				LOGOUT
+				<span className="material-symbols-outlined">
+					logout
+				</span>
+				<p className='max-[1020px]:hidden'>LOGOUT</p>
 			</button>
 			<div
-				className='mt-2 flex items-center gap-2'
+				className='mt-2 min-[1020px]:pl-4 flex items-center gap-2'
 			>
 				{appPfp ?
 					<div
-						className='rounded-full'
+						className='min-w-[44px]'
 					>
-						<img className='w-[44px] h-[44px] rounded-full object-cover' src={appPfp} />
+						<img className='size-[44px] rounded-full object-cover' src={appPfp} />
 					</div>
 					:
 					<span className="text-[44px] material-symbols-outlined filled rounded-full">
 						account_circle
 					</span>
 				}
-				<div>
-					<h3>{appNickname}</h3>
-					<p>{`@${appUsername}`}</p>
+				<div className='max-w-[160px] max-[1020px]:hidden '>
+					<h3 className='font-bold overflow-hidden text-nowrap text-ellipsis'>{appNickname}</h3>
+					<p className='overflow-hidden text-nowrap text-ellipsis'>{`@${appUsername}`}</p>
 				</div>
 			</div>
 		</div>

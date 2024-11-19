@@ -16,7 +16,7 @@ function ConnectPage() {
 		<Component.Err refetch={refetch} /> :
 		<div className='flex flex-col'>
 			<Component.Back />
-			<ul className="mt-2 flex flex-col gap-2">
+			<ul className="mt-2 flex flex-col items-stretch gap-4">
 				{createUserCards(users)}
 			</ul>
 			{loading ?
@@ -27,7 +27,7 @@ function ConnectPage() {
 						<div>
 							{userCount !== users.length ?
 								<button
-									className='p-2 border-[2px] border-black'
+									className='mt-2 px-5 py-1 rounded-full hover:text-white hover:bg-gray-onyx font-semibold'
 									onClick={() => setUserCount(users.length)}
 								>
 									GET MORE
