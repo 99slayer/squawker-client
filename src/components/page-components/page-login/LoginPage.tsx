@@ -27,19 +27,30 @@ function LoginPage() {
 		}
 	}
 
+	function handleOpen(openRef: React.RefObject<HTMLDialogElement>) {
+		const firstInput: HTMLInputElement | null = openRef!.current!.querySelector('input:first-of-type');
+		firstInput!.focus();
+	}
+
 	return (
 		<div className='flex flex-col items-center justify-center gap-2'>
 			<div className='mt-[220px] p-6 flex flex-col rounded-lg bg-gray-onyx'>
 				<div className='flex flex-col justify-evenly gap-4'>
 					<button
 						className='px-3 rounded-full hover:text-white bg-gray-outer-space'
-						onClick={() => { toggle(loginRef); }}
+						onClick={() => {
+							toggle(loginRef);
+							handleOpen(loginRef);
+						}}
 					>
 						LOGIN
 					</button>
 					<button
 						className='px-3 rounded-full hover:text-white bg-gray-outer-space'
-						onClick={() => { toggle(signupRef); }}
+						onClick={() => {
+							toggle(signupRef);
+							handleOpen(signupRef);
+						}}
 					>
 						SIGNUP
 					</button>

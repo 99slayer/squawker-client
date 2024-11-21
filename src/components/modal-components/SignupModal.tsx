@@ -68,6 +68,8 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 									type='text'
 									name='username'
 									placeholder='Username'
+									maxLength={50}
+									required
 								/>
 							</div>
 							<Component.ValidationErrors errors={validationErrors?.usernameErrors} />
@@ -87,6 +89,9 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 									type='email'
 									name='email'
 									placeholder='Email'
+									minLength={3}
+									maxLength={320}
+									required
 								/>
 							</div>
 							<Component.ValidationErrors errors={validationErrors?.emailErrors} />
@@ -106,6 +111,9 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 									type={passVis ? 'text' : 'password'}
 									name='password'
 									placeholder='Password'
+									minLength={8}
+									maxLength={200}
+									required
 								/>
 								<button
 									className='ml-2 p-[2px] flex rounded-md bg-gray-outer-space'
@@ -136,6 +144,9 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 									type={confirmVis ? 'text' : 'password'}
 									name='password-confirm'
 									placeholder='Password Confirm'
+									minLength={8}
+									maxLength={200}
+									required
 								/>
 								<button
 									className='ml-2 p-[2px] flex rounded-md bg-gray-outer-space'

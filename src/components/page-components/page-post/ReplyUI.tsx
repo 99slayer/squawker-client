@@ -50,6 +50,7 @@ function ReplyUI({ id }: { id: string | null }) {
 							ref={textRef}
 							name='text'
 							placeholder='What&apos;s up?'
+							maxLength={500}
 						/>
 						<Component.ValidationErrors errors={validationErrors?.textErrors} />
 						<Component.ValidationErrors errors={validationErrors?.imageErrors} />

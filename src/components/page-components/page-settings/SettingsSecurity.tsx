@@ -42,6 +42,9 @@ function SettingsSecurity() {
 						name='password'
 						type={passVis ? 'text' : 'password'}
 						placeholder='Password'
+						minLength={8}
+						maxLength={200}
+						required
 					/>
 					<button
 						className='ml-2 p-[2px] flex rounded-md bg-gray-outer-space'
@@ -70,6 +73,9 @@ function SettingsSecurity() {
 						name='password-confirm'
 						type={confirmVis ? 'text' : 'password'}
 						placeholder='Password Confirm'
+						minLength={8}
+						maxLength={200}
+						required
 					/>
 					<button
 						className='ml-2 p-[2px] flex rounded-md bg-gray-outer-space'

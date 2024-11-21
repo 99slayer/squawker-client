@@ -20,6 +20,11 @@ function Sidebar() {
 		postRef
 	} = useContext(MainContext) as MainContextInterface;
 
+	function handleOpen(openRef: React.RefObject<HTMLDialogElement>) {
+		const textarea: HTMLTextAreaElement | null = openRef!.current!.querySelector('textarea:first-of-type');
+		textarea!.focus();
+	}
+
 	return (
 		<div
 			className='flex flex-col items-start max-[1020px]:items-end gap-2'
@@ -84,7 +89,10 @@ function Sidebar() {
 			<button
 				className='flex-1 px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full text-xl font-semibold hover:text-white hover:bg-gray-onyx'
 				title='post'
-				onClick={() => { toggle(postRef); }}
+				onClick={() => {
+					toggle(postRef);
+					handleOpen(postRef);
+				}}
 			>
 				<span className="material-symbols-outlined">
 					edit_square

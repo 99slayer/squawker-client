@@ -66,6 +66,8 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 									type='text'
 									placeholder='Username'
 									name='username'
+									maxLength={50}
+									required
 								/>
 							</div>
 							<Component.ValidationErrors errors={validationErrors?.usernameErrors} />
@@ -85,6 +87,9 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 									type={passVis ? 'text' : 'password'}
 									placeholder='Password'
 									name='password'
+									minLength={8}
+									maxLength={200}
+									required
 								/>
 								<button
 									className='ml-2 p-[2px] flex rounded-md bg-gray-outer-space'

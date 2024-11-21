@@ -27,6 +27,8 @@ function SettingsAccount() {
 							name={'username'}
 							type='text'
 							placeholder={'Username'}
+							minLength={1}
+							maxLength={50}
 						/>
 					</div>
 					<Component.ValidationErrors errors={validationErrors?.usernameErrors} />
@@ -44,6 +46,8 @@ function SettingsAccount() {
 							name={'nickname'}
 							type='text'
 							placeholder={'Nickname'}
+							minLength={1}
+							maxLength={50}
 						/>
 					</div>
 					<Component.ValidationErrors errors={validationErrors?.nicknameErrors} />
@@ -61,6 +65,8 @@ function SettingsAccount() {
 							name={'email'}
 							type='email'
 							placeholder={'Email'}
+							minLength={3}
+							maxLength={320}
 						/>
 					</div>
 					<Component.ValidationErrors errors={validationErrors?.emailErrors} />
@@ -77,6 +83,7 @@ function SettingsAccount() {
 							className="flex-1 min-h-24 p-1 resize-none rounded-md bg-gray-outer-space"
 							name={'profile_text'}
 							placeholder={'Profile Text'}
+							maxLength={300}
 						/>
 					</div>
 					<Component.ValidationErrors errors={validationErrors?.profile_textErrors} />
