@@ -14,8 +14,12 @@ function ConnectPage() {
 
 	return (error ?
 		<Component.Err refetch={refetch} /> :
-		<div className='flex flex-col'>
-			<Component.Back />
+		<div className='flex flex-col relative'>
+			<div
+				className='pt-2 max-[1020px]:pt-[45px] sticky top-0 bg-black-night'
+			>
+				<Component.Back />
+			</div>
 			<ul className="mt-2 flex flex-col items-stretch gap-4">
 				{createUserCards(users)}
 			</ul>

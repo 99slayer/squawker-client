@@ -3,7 +3,6 @@ import { ConnectCardData, PostInterface } from '../types';
 import Component from './Component';
 
 export function createValidationErrors(arr: string[]): JSX.Element[] {
-	console.log(arr);
 	const elements: JSX.Element[] = [];
 	arr.map((x) => {
 		elements.push(<li key={uuid()}>{x}</li>);
@@ -41,7 +40,6 @@ export function createPostList(
 export function createUserCards(arr: ConnectCardData[]): JSX.Element[] {
 	const cards: JSX.Element[] = [];
 	arr.map((x) => {
-		console.log(x);
 		cards.push(
 			<li key={x._id}>
 				<Component.UserCard data={x} />

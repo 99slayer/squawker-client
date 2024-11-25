@@ -5,8 +5,8 @@ function UserConnectionsPage() {
 	const navigate = useNavigate();
 
 	return (
-		<div className='flex-1'>
-			<header className="px-2 py-2 flex flex-col gap-4 bg-black-night">
+		<div className='flex-1 relative'>
+			<header className="px-2 py-2 max-[1020px]:pt-[45px] flex flex-col gap-4 sticky top-0 bg-black-night">
 				<div className='flex gap-4'>
 					<button
 						className='hover:text-white'

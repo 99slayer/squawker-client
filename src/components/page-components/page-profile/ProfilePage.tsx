@@ -51,7 +51,7 @@ function ProfilePage() {
 			{userError ?
 				<Component.Err refetch={refetch} /> :
 				<div>
-					<header className='p-2 flex gap-4 sticky top-0 z-20 bg-black-night'>
+					<header className='p-2 max-[1020px]:pt-[45px] flex gap-4 sticky top-0 z-20 bg-black-night'>
 						<button
 							className='hover:text-white'
 							type='button'
