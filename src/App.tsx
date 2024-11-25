@@ -22,7 +22,7 @@ function App() {
 		setNickname(nickname);
 	}
 
-	function setAppPfp(pfp: string) {
+	function setAppPfp(pfp: string | null) {
 		if (pfp === null) {
 			localStorage.setItem('pfp', '');
 		} else localStorage.setItem('pfp', pfp);

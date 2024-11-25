@@ -85,7 +85,7 @@ export interface AppContextInterface {
 	appNickname: string;
 	setAppNickname: (nickname: string) => void;
 	appPfp: string | null;
-	setAppPfp: (pfp: string) => void;
+	setAppPfp: (pfp: string | null) => void;
 }
 
 export interface MainContextInterface {
