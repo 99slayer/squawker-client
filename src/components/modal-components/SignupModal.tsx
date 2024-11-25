@@ -48,9 +48,7 @@ const SignupModal = forwardRef<HTMLDialogElement, Props>(
 					</div>
 					<form
 						className='flex flex-col gap-2'
-						onSubmit={
-							async (e: FormEvent) => handleSignup(e)
-						}
+						onSubmit={async (e: FormEvent) => handleSignup(e)}
 						autoComplete='off'
 					>
 						<div className='flex flex-col gap-2'>

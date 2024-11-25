@@ -11,6 +11,7 @@ import {
 } from '../types';
 import { AppContext } from '../App';
 import { login } from '../api/auth';
+import { supaLogin } from '../supabase';
 
 function useLogin() {
 	const {
@@ -30,7 +31,10 @@ function useLogin() {
 		if (data.nickname) setAppNickname(data.nickname);
 		if (data.pfp) setAppPfp(data.pfp);
 		if (data.errors) setErrors(data.errors);
-		if (res.ok) navigate('/main');
+		if (res.ok) {
+			await supaLogin();
+			navigate('/main');
+		}
 	}, [navigate, setAppUsername, setAppNickname, setAppPfp]);
 
 	const setValidationErrors = useCallback(

@@ -4,6 +4,7 @@ import { user } from '../../../api/api';
 import { AppContext } from '../../../App';
 import { AppContextInterface, ReturnDataInterface } from '../../../types';
 import { useNavigate } from 'react-router-dom';
+import { supaLogout } from '../../../supabase';
 
 function LoginPage() {
 	const {
@@ -58,6 +59,7 @@ function LoginPage() {
 						<button
 							className='px-3 rounded-l-full hover:text-white bg-gray-outer-space'
 							onClick={async (e) => {
+								supaLogout();
 								const res: Response = await user.createGuestUser(e);
 								const data: ReturnDataInterface = await res.json();
 								if (data.username) setAppUsername(data.username);

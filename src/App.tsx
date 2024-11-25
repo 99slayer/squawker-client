@@ -2,6 +2,7 @@ import { createContext, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { logout } from './api/auth';
 import { AppContextInterface, RequestEvent } from './types';
+import { supaLogout } from './supabase';
 
 export const AppContext = createContext<AppContextInterface | null>(null);
 
@@ -31,6 +32,7 @@ function App() {
 
 	async function appLogout(e: RequestEvent): Promise<void> {
 		await logout(e);
+		await supaLogout();
 		setPfp(null);
 		navigate('/');
 	}

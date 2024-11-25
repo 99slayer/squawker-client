@@ -7,6 +7,7 @@ import React, {
 import { FormEvent } from '../../types';
 import Component from '../Component';
 import hook from '../../hooks/hooks';
+import { supaLogout } from '../../supabase';
 
 type Props = {
 	toggle: (ref: React.RefObject<HTMLDialogElement>) => void;
@@ -46,9 +47,10 @@ const LoginModal = forwardRef<HTMLDialogElement, Props>(
 					</div>
 					<form
 						className='flex flex-col gap-2'
-						onSubmit={
-							async (e: FormEvent) => handleLogin(e)
-						}
+						onSubmit={async (e: FormEvent) => {
+							supaLogout();
+							handleLogin(e);
+						}}
 						autoComplete='off'
 					>
 						<div className='flex flex-col gap-2'>
