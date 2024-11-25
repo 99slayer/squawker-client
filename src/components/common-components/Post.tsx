@@ -194,7 +194,7 @@ function Post({ data }: { data: PostInterface | null }) {
 							:
 							<div>
 								{data.post.text ?
-									<p className='mt-2 mb-2'>
+									<p className='mt-2 mr-4 mb-2'>
 										{editText ?? data.post.text}
 									</p>
 									:
@@ -291,7 +291,7 @@ function Post({ data }: { data: PostInterface | null }) {
 											: <></>
 										}
 										{data.quoted_post.post.text ?
-											<p className='flex-2 min-w-[50%]'>{data.quoted_post.post.text}</p>
+											<p className='flex-2 mr-4 min-w-[50%]'>{data.quoted_post.post.text}</p>
 											: <></>
 										}
 									</div>

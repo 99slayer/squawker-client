@@ -99,7 +99,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 						</div>
 						{image ?
 							<div
-								className='relative'
+								className='self-center relative'
 							>
 								<img
 									className='rounded-lg'

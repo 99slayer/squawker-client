@@ -55,7 +55,7 @@ function App() {
 			>
 				<Outlet />
 				<div
-					className='flex items-start gap-1 fixed top-2 left-[16px] text-green-harlequin'
+					className='flex items-start gap-1 fixed top-2 left-[16px] text-green-harlequin z-50'
 				>
 					<h1 className='self-end font-extrabold tracking-widest'>
 						SQUAWKER
