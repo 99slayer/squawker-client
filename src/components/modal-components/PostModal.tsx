@@ -51,6 +51,8 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 				className='w-[500px] max-w-[500px] max-h-[75%] mx-auto mt-[140px] p-2 border-[3px] border-gray-outer-space rounded-lg text-white/50 bg-black-eerie-black'
 				ref={ref}
 				onClose={() => {
+					textRef.current!.value = '';
+					fileRef.current!.value = '';
 					setPostId(null);
 					setImage(null);
 					setUpload({ type: null, data: null, folder: null });
