@@ -262,7 +262,7 @@ function Post({ data }: { data: PostInterface | null }) {
 										</span>
 									}
 								</div>
-								<div className='flex flex-col gap-2'>
+								<div className='flex-1 flex flex-col gap-2'>
 									<div className='flex items-center gap-2 gap-y-0 flex-wrap'>
 										<h3
 											className='max-w-[30%] font-semibold overflow-hidden text-nowrap text-ellipsis'
@@ -280,7 +280,7 @@ function Post({ data }: { data: PostInterface | null }) {
 											{`${formatDate(data.quoted_post.post_data.timestamp)}`}
 										</p>
 									</div>
-									<div className='flex gap-4 justify-center items-start'>
+									<div className='flex gap-4 items-start'>
 										{data.quoted_post.post.post_image ?
 											<div>
 												<img
