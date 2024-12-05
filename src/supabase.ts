@@ -2,8 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 import { v4 as uuid } from 'uuid';
 
 const bucket = 'test';
-const supaurl = import.meta.env.VITE_URL;
-const key = import.meta.env.VITE_PUBLIC_KEY;
+const supaurl = import.meta.env.VITE_SUPA_URL;
+const key = import.meta.env.VITE_SUPA_PUBLIC_KEY;
 const supabase = createClient(supaurl, key);
 
 export async function supaLogin() {

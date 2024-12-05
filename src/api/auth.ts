@@ -1,4 +1,4 @@
-const domain = 'https://localhost:3000';
+const domain = import.meta.env.VITE_API_DOMAIN;
 import { request } from './request';
 import { Options, FormEvent, RequestEvent } from '../types';
 
