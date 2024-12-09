@@ -33,7 +33,7 @@ function Sidebar() {
 				<li className="flex items-center">
 					<Link
 						className='px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full hover:text-white hover:bg-gray-onyx'
-						to={'/main'}
+						to={'/squawker-client/main'}
 						key={uuid()}
 						title='home'
 					>
@@ -47,7 +47,7 @@ function Sidebar() {
 					<Link
 						className='px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full hover:text-white hover:bg-gray-onyx'
 						key={uuid()}
-						to={'/main/profile'}
+						to={'/squawker-client/main/profile'}
 						state={{ username: appUsername }}
 						title='profile'
 					>
@@ -61,7 +61,7 @@ function Sidebar() {
 					<Link
 						className='px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full hover:text-white hover:bg-gray-onyx'
 						key={uuid()}
-						to={'/main/connect'}
+						to={'/squawker-client/main/connect'}
 						state={{ username: appUsername }}
 						title='connect'
 					>
@@ -75,7 +75,7 @@ function Sidebar() {
 					<Link
 						className='px-4 py-1 max-[1020px]:p-1 flex items-center gap-2 rounded-full hover:text-white hover:bg-gray-onyx'
 						key={uuid()}
-						to={'/main/settings'}
+						to={'/squawker-client/main/settings/account'}
 						state={{ username: appUsername }}
 						title='settings'
 					>

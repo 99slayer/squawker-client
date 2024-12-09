@@ -52,19 +52,18 @@ function Post({ data }: { data: PostInterface | null }) {
 			<article
 				className="my-2 p-2 flex flex-col gap-2 rounded-lg bg-black-eerie-black cursor-pointer break-all"
 				onClick={() => {
-					if (location.pathname === `/main/status/post/${data._id}`) return;
+					if (location.pathname === `/squawker-client/main/status/post/${data._id}`) return;
 					if (data.post_type === 'Post') {
 						navigate(
-							`/main/status/post/${data._id}`,
+							`/squawker-client/main/status/post/${data._id}`,
 							{ state: { id: data._id } }
 						);
 					} else {
 						navigate(
-							`/main/status/comment/${data._id}`,
+							`/squawker-client/main/status/comment/${data._id}`,
 							{ state: { id: data._id } }
 						);
 					}
-
 				}}
 			>
 				{data.post_data.repost ?
@@ -93,7 +92,7 @@ function Post({ data }: { data: PostInterface | null }) {
 								className='flex items-center gap-2 gap-y-0 flex-wrap'
 								onClick={(e) => {
 									e.stopPropagation();
-									navigate('/main/profile', {
+									navigate('/squawker-client/main/profile', {
 										state: {
 											username: (
 												data.post_data.repost ?
@@ -226,7 +225,7 @@ function Post({ data }: { data: PostInterface | null }) {
 									if (!data.quoted_post!._id) return;
 									if (data.quoted_post?.post_type === 'Post') {
 										navigate(
-											`/main/status/post/${data.quoted_post!._id}`,
+											`/squawker-client/main/status/post/${data.quoted_post!._id}`,
 											{
 												state: {
 													id: data.quoted_post!._id,
@@ -236,7 +235,7 @@ function Post({ data }: { data: PostInterface | null }) {
 										);
 									} else {
 										navigate(
-											`/main/status/comment/${data.quoted_post!._id}`,
+											`/squawker-client/main/status/comment/${data.quoted_post!._id}`,
 											{
 												state: {
 													id: data.quoted_post!._id,
@@ -473,7 +472,7 @@ function RepostDropdown({
 								const data: { _id: string } = await res.json();
 								if (res.ok) {
 									navigate(
-										`/main/status/post/${data._id}`,
+										`/squawker-client/main/status/post/${data._id}`,
 										{
 											state: {
 												id: data._id,
@@ -487,7 +486,7 @@ function RepostDropdown({
 								const data: { _id: string } = await res.json();
 								if (res.ok) {
 									navigate(
-										`/main/status/comment/${data._id}`,
+										`/squawker-client/main/status/comment/${data._id}`,
 										{
 											state: {
 												id: data._id,

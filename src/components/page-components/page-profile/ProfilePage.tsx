@@ -287,7 +287,7 @@ function ProfilePage() {
 								<div className="flex gap-2">
 									<Link
 										className='px-4 py-1 rounded-full bg-gray-outer-space hover:text-white'
-										to={'/main/connections/following'}
+										to={'/squawker-client/main/connections/following'}
 										state={{
 											username: currentUser!.username,
 											nickname: currentUser!.nickname
@@ -297,7 +297,7 @@ function ProfilePage() {
 									</Link>
 									<Link
 										className='px-4 py-1 rounded-full bg-gray-outer-space hover:text-white'
-										to={'/main/connections/followers'}
+										to={'/squawker-client/main/connections/followers'}
 										state={{
 											username: currentUser!.username,
 											nickname: currentUser!.nickname
@@ -310,14 +310,14 @@ function ProfilePage() {
 							<div className="my-4 flex gap-4">
 								<Link
 									className='flex-1 px-8 py-1 flex justify-center items-center rounded-full text-xl font-semibold text-center bg-gray-onyx hover:text-white'
-									to={'/main/profile/'}
+									to={'/squawker-client/main/profile/'}
 									state={{ username: currentUser!.username }}
 								>
 									POSTS
 								</Link>
 								<Link
 									className='flex-1 px-8 py-1 flex justify-center items-center rounded-full text-xl font-semibold text-center bg-gray-onyx hover:text-white'
-									to={'/main/profile/replies'}
+									to={'/squawker-client/main/profile/replies'}
 									state={{ username: currentUser!.username }}
 								>
 									REPLIES

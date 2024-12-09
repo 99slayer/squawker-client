@@ -27,7 +27,7 @@ function UserConnectionsPage() {
 				<div className='flex gap-4'>
 					<Link
 						className='px-4 py-1 rounded-full hover:text-white bg-gray-onyx'
-						to={'/main/connections/followers'}
+						to={'/squawker-client/main/connections/followers'}
 						state={{
 							username: state.username,
 							nickname: state.nickname
@@ -38,7 +38,7 @@ function UserConnectionsPage() {
 
 					<Link
 						className='px-4 py-1 rounded-full hover:text-white bg-gray-onyx'
-						to={'/main/connections/following'}
+						to={'/squawker-client/main/connections/following'}
 						state={{
 							username: state.username,
 							nickname: state.nickname

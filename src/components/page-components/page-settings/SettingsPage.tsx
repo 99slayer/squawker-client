@@ -13,13 +13,13 @@ function SettingsPage() {
 					<div className="flex flex-col gap-2">
 						<Link
 							className="px-4 py-1 flex justify-center rounded-full font-semibold hover:text-white bg-gray-outer-space"
-							to={'/main/settings'}
+							to={'/squawker-client/main/settings/account'}
 						>
 							Account
 						</Link>
 						<Link
 							className="px-4 py-1 flex justify-center rounded-full font-semibold hover:text-white bg-gray-outer-space"
-							to={'/main/settings/security'}
+							to={'/squawker-client/main/settings/security'}
 						>
 							Security
 						</Link>

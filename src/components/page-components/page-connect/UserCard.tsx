@@ -19,7 +19,7 @@ function UserCard({ data }: { data: ConnectCardData }) {
 			className="p-2 flex items-center gap-2 rounded-lg bg-gray-onyx cursor-pointer"
 			onClick={(e) => {
 				e.stopPropagation();
-				navigate('/main/profile', {
+				navigate('/squawker-client/main/profile', {
 					state: {
 						username: data.username
 					}

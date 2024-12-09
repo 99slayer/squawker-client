@@ -12,7 +12,7 @@ function InvalidRoutePage() {
 				className='mt-[30px] mr-auto'
 				type='button'
 				onClick={() => {
-					navigate('/');
+					navigate('/squawker-client');
 				}}
 			>
 				<span className="material-symbols-outlined">

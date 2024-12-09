@@ -9,7 +9,7 @@ import Component from './components/Component.ts';
 
 const router = createBrowserRouter([
 	{
-		path: '/',
+		path: '/squawker-client',
 		element: <Component.App />,
 		children: [
 			{
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
 						element: <Component.SettingsPage />,
 						children: [
 							{
-								index: true,
+								path: 'account',
 								element: <Component.SettingsAccount />
 							},
 							{

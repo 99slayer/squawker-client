@@ -33,7 +33,7 @@ function useLogin() {
 		if (data.errors) setErrors(data.errors);
 		if (res.ok) {
 			await supaLogin();
-			navigate('/main');
+			navigate('/squawker-client/main');
 		}
 	}, [navigate, setAppUsername, setAppNickname, setAppPfp]);
 

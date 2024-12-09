@@ -65,7 +65,7 @@ function LoginPage() {
 								if (data.username) setAppUsername(data.username);
 								if (data.nickname) setAppNickname(data.nickname);
 								if (data.pfp) setAppPfp(data.pfp);
-								if (res.ok) navigate('/main');
+								if (res.ok) navigate('/squawker-client/main');
 							}}
 						>
 							LOGIN AS GUEST

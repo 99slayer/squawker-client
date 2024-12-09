@@ -34,7 +34,7 @@ function App() {
 		await logout(e);
 		await supaLogout();
 		setPfp(null);
-		navigate('/');
+		navigate('/squawker-client');
 	}
 
 	const contextValues: AppContextInterface = {

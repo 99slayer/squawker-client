@@ -31,7 +31,7 @@ function useCreatePost() {
 				if (res.ok) {
 					success = true;
 					navigate(
-						`/main/status/${postType.toLowerCase()}/${data._id}`,
+						`/squawker-client/main/status/${postType.toLowerCase()}/${data._id}`,
 						{
 							state: {
 								id: data._id,
