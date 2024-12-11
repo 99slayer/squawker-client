@@ -201,10 +201,12 @@ function Post({ data }: { data: PostInterface | null }) {
 							</div>
 						}
 						{data.post.post_image ?
-							<img
-								className='mr-[44px] mb-2 rounded-lg'
-								src={data.post.post_image}
-							/>
+							<div className='max-h-[600px] mr-[44px] mb-2 flex justify-start'>
+								<img
+									className='rounded-lg object-contain'
+									src={data.post.post_image}
+								/>
+							</div>
 							: <></>
 						}
 						{data.quoted_post && !data.quoted_post.post_data ?
