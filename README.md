@@ -1,14 +1,19 @@
 # Squawker-client
+![logo](./public/squawker-logo.png)
+
 Squawker is my final project for The Odin Project. It aims to replicate the core functionality of Twitter.
 
-Checkout the live preview! 👉 [Squawker Live Demo]()
+Checkout the live preview! 👉 **[Squawker Live Demo](https://99slayer.github.io/squawker-client)**\
+**The demo is hosted on a free [render](https://render.com/) instance, so the app may need around one minute to spin up due to inactivity.**
+
+Checkout the back-end repo! 👉 **[Squawker-api](https://github.com/99slayer/squawker-api)**
 
 #### Features
 - Account creation
 - Account updating
 - Homepage timeline
 - User profiles
-- User profile pictures and headers
+- User profile pictures and profile headers
 - User followers and following
 - Post/comment creation (including images!)
 - Post/comment editing
@@ -23,6 +28,3 @@ Checkout the live preview! 👉 [Squawker Live Demo]()
 - React
 - TypeScript
 - Supabase
-
----
-[Squawker-api](https://github.com/99slayer/squawker-api)
