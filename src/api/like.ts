@@ -1,4 +1,4 @@
-const domain = import.meta.env.VITE_API_DOMAIN;
+const domain = import.meta.env.VITE_API_URL;
 import { request } from './request';
 import { Options, RequestEvent } from '../types';
 
