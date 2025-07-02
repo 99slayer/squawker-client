@@ -3,9 +3,11 @@ Squawker is my final project for The Odin Project. It aims to replicate the core
 ![Project image 1.](/public/squawker-1.png)\
 ![Project image 2.](/public/squawker-2.png)
 
-Checkout the live preview! 👉 **[Squawker Live Demo](https://99slayer.github.io/squawker-client)**\
-**The demo is hosted on a free [render](https://render.com/) instance, so the app may need around one minute to spin up due to inactivity.**
+🚨🚨🚨\
+**The live preview is hosted on a free [render](https://render.com/) instance, and may need around one minute to spin up, due to inactivity, on login.**\
+🚨🚨🚨
 
+Checkout the live preview! 👉 **[Squawker Live Preview](https://99slayer.github.io/squawker-client)**\
 Checkout the back-end repo! 👉 **[Squawker-api](https://github.com/99slayer/squawker-api)**
 
 #### Features
