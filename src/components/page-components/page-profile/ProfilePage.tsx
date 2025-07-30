@@ -83,7 +83,11 @@ function ProfilePage() {
 						<form
 							onSubmit={async (e) => {
 								e.preventDefault();
-								handleUpdateUser(e);
+								try {
+									await handleUpdateUser(e);
+								} catch (error) {
+									throw error;
+								}
 							}}
 						>
 							<input
@@ -160,9 +164,11 @@ function ProfilePage() {
 											onClick={async (e) => {
 												e.preventDefault();
 												e.stopPropagation();
-												await clearUpload(pfpRef.current!.value);
+
+												const path = pfpRef.current!.value;
 												pfpRef.current!.value = 'clear';
 												pfpRef.current!.form?.requestSubmit();
+												await clearUpload(path);
 											}}
 										>X</button>
 										: <></>
@@ -174,7 +180,11 @@ function ProfilePage() {
 							<form
 								onSubmit={async (e) => {
 									e.preventDefault();
-									handleUpdateUser(e);
+									try {
+										await handleUpdateUser(e);
+									} catch (error) {
+										throw error
+									}
 								}}
 							>
 								<input
@@ -245,9 +255,11 @@ function ProfilePage() {
 												onClick={async (e) => {
 													e.preventDefault();
 													e.stopPropagation();
-													await clearUpload(headerRef.current!.value);
+
+													const path = headerRef.current!.value;
 													headerRef.current!.value = 'clear';
 													headerRef.current!.form?.requestSubmit();
+													await clearUpload(path);
 												}}
 											>X</button>
 											:
