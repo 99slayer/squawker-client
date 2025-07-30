@@ -41,8 +41,7 @@ export async function upload(uploadData: {
 	}
 }
 
-export async function clearUpload(url: string) {
-	const path: string = getPath(url);
+export async function clearUpload(path: string) {
 	await supabase
 		.storage
 		.from(bucket)
@@ -58,10 +57,4 @@ export function getURL(path: string | null | undefined): string {
 		.from(bucket)
 		.getPublicUrl(path);
 	return data.publicUrl;
-}
-
-function getPath(url: string) {
-	const separator: string = supaurl + '/storage/v1/object/public/test/';
-	const path: string[] = url.split(separator);
-	return path[1];
 }
