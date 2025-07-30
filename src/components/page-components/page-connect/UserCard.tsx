@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { user } from '../../../api/api';
 import { AppContext } from '../../../App';
 import { AppContextInterface, ConnectCardData } from '../../../types';
+import { getURL } from '../../../supabase';
 
 function UserCard({ data }: { data: ConnectCardData }) {
 	const { appUsername } = useContext(AppContext) as AppContextInterface;
@@ -30,7 +31,7 @@ function UserCard({ data }: { data: ConnectCardData }) {
 				{data.pfp ?
 					<img
 						className='size-[50px] p-1 rounded-full object-cover'
-						src={data.pfp}
+						src={getURL(data.pfp)}
 					/>
 					:
 					<span

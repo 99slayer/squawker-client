@@ -10,7 +10,7 @@ import {
 	FormEvent
 } from '../../types';
 import { formatDate } from '../../util';
-import { upload } from '../../supabase';
+import { getURL, upload } from '../../supabase';
 import { AppContext } from '../../App';
 import hook from '../../hooks/hooks';
 import Component from '../Component';
@@ -80,7 +80,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 								<div
 									className='rounded-full'
 								>
-									<img className='p-1 size-[44px] rounded-full object-cover' src={appPfp} />
+									<img className='p-1 size-[44px] rounded-full object-cover' src={getURL(appPfp)} />
 								</div>
 								:
 								<span className="text-[44px] material-symbols-outlined filled rounded-full">
@@ -128,7 +128,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 								{quotedPost.post.user.pfp ?
 									<img
 										className='p-1 size-[44px] rounded-full object-cover'
-										src={quotedPost.post.user.pfp}
+										src={getURL(quotedPost.post.user.pfp)}
 									/>
 									:
 									<span className="text-[44px] material-symbols-outlined filled">
@@ -164,7 +164,7 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 										{quotedPost.post.post_image ?
 											<img
 												className='size-[100px] rounded-lg object-cover'
-												src={quotedPost.post.post_image}
+												src={getURL(quotedPost.post.post_image)}
 											/>
 											: <></>
 										}
@@ -238,10 +238,10 @@ const PostModal = forwardRef<HTMLDialogElement, Props>(
 									setDisabled(true);
 
 									if (uploadData.type && uploadData.data) {
-										const url: string | null = await upload(uploadData);
-										if (!url) return;
+										const resourcePath: string | null = await upload(uploadData);
+										if (!resourcePath) return;
 
-										fileRef.current!.value = url;
+										fileRef.current!.value = resourcePath;
 									}
 
 									fileRef.current?.form?.requestSubmit();

@@ -8,7 +8,7 @@ import {
 	PostInterface,
 	ReturnDataInterface
 } from '../../types';
-import { clearUpload } from '../../supabase';
+import { clearUpload, getURL } from '../../supabase';
 import Component from '../Component';
 
 function Post({ data }: { data: PostInterface | null }) {
@@ -76,7 +76,7 @@ function Post({ data }: { data: PostInterface | null }) {
 						{data.post.user.pfp ?
 							<img
 								className='p-[2px] size-[40px] rounded-full object-cover'
-								src={data.post.user.pfp}
+								src={getURL(data.post.user.pfp)}
 							/>
 							:
 							<span
@@ -204,7 +204,7 @@ function Post({ data }: { data: PostInterface | null }) {
 							<div className='max-h-[600px] mr-[44px] mb-2 flex justify-start'>
 								<img
 									className='rounded-lg object-contain'
-									src={data.post.post_image}
+									src={getURL(data.post.post_image)}
 								/>
 							</div>
 							: <></>
@@ -253,7 +253,7 @@ function Post({ data }: { data: PostInterface | null }) {
 									{data.quoted_post.post.user.pfp ?
 										<img
 											className='p-[2px] size-[40px] rounded-full object-cover'
-											src={data.quoted_post.post.user.pfp}
+											src={getURL(data.quoted_post.post.user.pfp)}
 										/>
 										:
 										<span
@@ -286,7 +286,7 @@ function Post({ data }: { data: PostInterface | null }) {
 											<div>
 												<img
 													className='flex-1 rounded-lg'
-													src={data.quoted_post.post.post_image}
+													src={getURL(data.quoted_post.post.post_image)}
 												/>
 											</div>
 											: <></>

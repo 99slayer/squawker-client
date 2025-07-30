@@ -4,7 +4,7 @@ import { user } from '../../../api/api';
 import { formatDate } from '../../../util';
 import { AppContextInterface } from '../../../types';
 import { AppContext } from '../../../App';
-import { clearUpload, upload } from '../../../supabase';
+import { clearUpload, getURL, upload } from '../../../supabase';
 import hook from '../../../hooks/hooks';
 import Component from '../../Component';
 
@@ -117,13 +117,13 @@ function ProfilePage() {
 										const arrayReader: FileReader = new FileReader();
 										arrayReader.onload = async (e) => {
 											if (!e.target) return;
-											const url: string | null = await upload({
+											const resourcePath: string | null = await upload({
 												type: file.type,
 												data: e.target.result as ArrayBuffer,
 												folder: 'pfp'
 											});
-											if (!url) return;
-											pfpRef.current!.value = url;
+											if (!resourcePath) return;
+											pfpRef.current!.value = resourcePath;
 											pfpRef.current!.form?.requestSubmit();
 										};
 										arrayReader.readAsArrayBuffer(file);
@@ -144,7 +144,7 @@ function ProfilePage() {
 										{(isUser && Boolean(appPfp)) || (!isUser && currentUser!.pfp) ?
 											<img
 												className='size-[120px] rounded-full object-cover'
-												src={isUser ? appPfp as string : currentUser!.pfp}
+												src={isUser ? getURL(appPfp) as string : getURL(currentUser!.pfp)}
 											/>
 											:
 											<span
@@ -234,7 +234,7 @@ function ProfilePage() {
 										{header ?
 											<img
 												className='w-[100%] rounded-t-xl object-cover'
-												src={header}
+												src={getURL(header)}
 											/>
 											:
 											<></>

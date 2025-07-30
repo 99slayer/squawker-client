@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { v4 as uuid } from 'uuid';
 
-const bucket = 'test';
+const bucket = import.meta.env.VITE_BUCKET;
 const supaurl = import.meta.env.VITE_SUPA_URL;
 const key = import.meta.env.VITE_SUPA_PUBLIC_KEY;
 const supabase = createClient(supaurl, key);
@@ -37,7 +37,7 @@ export async function upload(uploadData: {
 	if (error) {
 		return null;
 	} else {
-		return getURL(data.path);
+		return data.path;
 	}
 }
 
@@ -49,12 +49,15 @@ export async function clearUpload(url: string) {
 		.remove([path]);
 }
 
-function getURL(path: string) {
+export function getURL(path: string | null | undefined): string {
+	if (!path) return '';
+	if (path.includes('https://') || path.includes('http://')) return path;
+
 	const { data } = supabase
 		.storage
 		.from(bucket)
 		.getPublicUrl(path);
-	return data.publicUrl ?? null;
+	return data.publicUrl;
 }
 
 function getPath(url: string) {

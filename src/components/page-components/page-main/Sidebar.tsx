@@ -7,6 +7,7 @@ import {
 } from '../../../types';
 import { AppContext } from '../../../App';
 import { MainContext } from './MainTemplate';
+import { getURL } from '../../../supabase';
 
 function Sidebar() {
 	const {
@@ -116,7 +117,7 @@ function Sidebar() {
 					<div
 						className='min-w-[44px]'
 					>
-						<img className='size-[44px] rounded-full object-cover' src={appPfp} />
+						<img className='size-[44px] rounded-full object-cover' src={getURL(appPfp)} />
 					</div>
 					:
 					<span className="text-[44px] material-symbols-outlined filled rounded-full">
