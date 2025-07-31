@@ -41,11 +41,21 @@ npm install
 Start the development server with `npm run dev`
 
 #### Usage
-Create these environment variables in a `.env` file.
+In the project's root directory create the following .env files and variables.
+
+.env.development
 ```
-VITE_API_URL=<backend_url>
-VITE_SUPA_URL=<supabase_database_endpoint>
-VITE_SUPA_PUBLIC_KEY=<supabase_public_api_key>
+VITE_SUPA_URL=<supabase development project url>
+VITE_SUPA_PUBLIC_KEY=<supabase development project public api key>
+VITE_API_URL=<development backend url>
+VITE_BUCKET=<supabase development project bucket>
+```
+.env.production
+```
+VITE_SUPA_URL=<supabase production project url>
+VITE_SUPA_PUBLIC_KEY=<supabase production project public api key>
+VITE_API_URL=<production backend url>
+VITE_BUCKET=<supabase production project bucket>
 ```
 This project uses [supabase storage](https://supabase.com/docs/guides/storage) to store and manage user uploaded images.
 
