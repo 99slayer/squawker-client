@@ -41,7 +41,7 @@ npm install
 Start the development server with `npm run dev`
 
 #### Usage
-In the project's root directory create the following .env files and variables.
+Create the following .env files and variables in the project’s root directory.
 
 .env.development
 ```
