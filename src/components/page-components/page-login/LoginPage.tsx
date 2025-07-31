@@ -87,12 +87,19 @@ function LoginPage() {
 				</div>
 			</div>
 			<div
-				className={`w-[245px] p-2 rounded-lg text-sm text-white bg-blue-500 ${infoHover ? 'opacity-100' : 'opacity-0'}`}
+				className={`w-[320px] p-3 rounded-lg text-sm text-white bg-blue-500 ${infoHover ? 'opacity-100' : 'opacity-0'}`}
 			>
 				<p>
 					This will log you into a temporary guest account. You will be able to browse user accounts and posts, but you will not be able to interact with them or create your own.
 				</p>
 			</div>
+			{
+				import.meta.env.VITE_PREVIEW ?
+					<div className={`w-[320px] p-3 rounded-lg text-sm text-white fixed top-[400px] bg-red-600 ${infoHover ? 'opacity-0' : 'opacity-100'}`}>
+						This live preview is hosted on a free Render instance, and may need around one minute to spin up, due to inactivity, on login/signup.
+					</div> :
+					<></>
+			}
 		</div>
 	);
 }

@@ -81,6 +81,8 @@ function App() {
 				<a
 					className='fixed bottom-4 left-2'
 					href='https://github.com/99slayer'
+					target='_blank'
+					rel='noopener noreferrer'
 					title='My github'
 				>
 					<svg
